@@ -25,13 +25,17 @@
                 <label for="alamat">Alamat</label>
                 <textarea class="form-control" rows="2" placeholder="Alamat" name="customer_address">{{ $data->customer_address }}</textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Simpan</button>
+              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
               @if($data->id)
-                <a href="#" id="delete" type="button" class="btn btn-danger">Hapus</a>
+                <a href="#" class="btn btn-sm btn-danger" 
+                    delete-title="Konfirmasi Hapus Data"
+                  delete-action="{{ action('CustomersController@postDelete', array('id' => $data->id)) }}"
+                  delete-message="Apakah anda yakin untuk menghapus data ini?"
+                  delete-success-url="{{ action('CustomersController@index') }}">
+                  <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
               @endif
             </form>
           </div>
-        
       </div>
     </div>
   </div>
@@ -71,14 +75,7 @@
 @section('form-js')
 <script>
     $(document).ready(function (){
-      $('#delete').click(function(){
-        modalPopup('Hapus Data'
-          , '{{action("CustomersController@postDelete")}}'
-          , $('#csid').val()
-          , 'Hapus'
-          , 'Delete'
-          , $('#customer_name').val())
-      });
+      
     });
 </script>
 @endsection

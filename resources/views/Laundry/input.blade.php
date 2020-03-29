@@ -117,40 +117,40 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Total</span>
         </div>
-        <input type="text" class="form-control" id="total" readonly>
+        <input type="text" class="form-control  text-right" id="total" readonly>
       </div>
       <div class="input-group" style="margin-bottom:5px"> 
         <div class="input-group-prepend">
           <span class="input-group-text">Bayar</span>
         </div>
-        <input type="number" class="form-control" name="laundry_paidoff">
+        <input type="number" class="form-control text-right" name="laundry_paidoff" required>
       </div>
       <div class="input-group" style="margin-bottom:5px"> 
         <div class="input-group-prepend">
           <span class="input-group-text">Selisih</span>
         </div>
-        <input type="number" class="form-control" id="diff" readonly>
+        <input type="number" class="form-control text-right" id="diff" readonly>
       </div>
     </div>
   </div>
 </form>
 
-<div id="declinePopUp" style="display:none;">
+<div id="custPopup" style="display:none;">
   <div class="form-horizontal">
-    <div class="form-group">
+    <div class="form-group required">
       <label for="nama">Nama</label>
       <input type="hidden"  name="modal" value="1"  class="form-control">
-      <input type="text"  name="customer_name" placeholder="Nama Pelanggan" class="form-control">
+      <input type="text"  name="customer_name" placeholder="Nama Pelanggan" class="form-control" required>
     </div>
-    <div class="form-group">
+    <div class="form-group required">
       <label for="kontak">Kontak</label>
-      <input type="text" name="customer_phone" class="form-control" id="kontak" placeholder="Kontak Pelanggan">
+      <input type="text" name="customer_phone" class="form-control" id="kontak" placeholder="Kontak Pelanggan" required>
     </div>
     <div class="form-group">
       <label for="alamat">Alamat</label>
       <textarea class="form-control" rows="2" placeholder="Alamat" name="customer_address"></textarea>
     </div>
-    </div>
+  </div>
 </div>
 
 <table class="row-template invisible" >
@@ -168,7 +168,6 @@
 
     $('[name=laundry_customer_id]').on('change', function() {
       let selected = $(this).children("option:selected").val();
-      alert(selected)
       if(selected != null){
         $('.add-row').prop('disabled', false);
       } else {
@@ -203,8 +202,8 @@
       $(this),
       { btnType: 'primary', keepOpen: true },
       'Tambah Data Pelanggan',
-      $('#declinePopUp'),
-      $(this).attr('data-submit-url'),
+      $('#custPopup'),
+      '{{ action("CustomersController@postEdit") }}',
       function ($form){
           return {
             customer_name: $form.find('[name=customer_name]').val(),
@@ -219,8 +218,8 @@
       });
     });
 
-    $('input[name="laundry_delivery"]').click(function(){
-      if($('input[name="laundry_delivery"]').is(':checked')){
+    $('#laundry_delivery').click(function(){
+      if($('#laundry_delivery').is(':checked')){
         $('#deliv').text('Ya');
       } else {
         $('#deliv').text('Tidak');
@@ -228,9 +227,16 @@
     })
   });
 
-  function calculate()
+  function setupTotal()
   {
-    
+    let detailRows = $('#detailLaundry').find('[name^=dtl][name$="[ldetail_price]"]').closest('tr');
+    let totalLaundry = 0;
+
+    detailRows.each(function(){
+      totalLaundry += parseFloat($(this).find('[name^=dtl][name$="[ldetail_price]"]').val());
+    });
+
+    $('#total').val(totalLaundry);
   }
 
   function setupTableGrid($targetContainer)
@@ -240,6 +246,8 @@
     $targetContainer.on('row-added', function (e, $row){
       setupDetailLaundry($row);
     });
+
+    setupTotal();
   }
     
   function setupDetailLaundry($targetContainer)
@@ -259,43 +267,20 @@
       var cB = e.params.data;
       $targetContainer.find('[name^=dtl][name$="[price]"]').val(cB.price);
       
-      setupPrice();
+      setupPrice($targetContainer);
       //console.log(data);
     });
   }
-
-  function inputSearch(inputId, urlSearch, width, callBack)
-  {
-    let input = $(inputId);
-    input.select2({
-      placeholder: 'Cari...',
-      width: width,
-      ajax: {
-        url: urlSearch,
-        dataType: 'json',
-        delay: 250,
-        processResults: function (data) {
-          return {
-            results:  $.map(data, function (item) {
-              return callBack(item)
-            })
-          };
-        },
-        cache: false
-      }
-    })
-  }
     
-  function setupPrice()
+  function setupPrice($targetContainer)
   {
-    var $targetContainer = $('#detailLaundry');
     var price = $targetContainer.find('[name^=dtl][name$="[price]"]');
     var qty = $targetContainer.find('[name^=dtl][name$="[ldetail_qty]"]');
     var total = $targetContainer.find('[name^=dtl][name$="[ldetail_price]"]');
     setTimeout(() => {
       qty.focusout(function(e){
-        alert(Number(qty.val()) * Number(price.val()));
         total.val(Number(qty.val()) * Number(price.val()));
+        setupTotal();
       });
     }, 1000);
   }

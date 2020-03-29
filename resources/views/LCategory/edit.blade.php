@@ -32,10 +32,15 @@
                 <input type="number" name="lcategory_price" value="{{ $data->lcategory_price }}" class="form-control" id="lcategory_price" placeholder="Harga">
               </div>
               @if(Perm::can(['kategoriLaundry_simpan']))
-                <button type="submit" class="btn btn-primary">Simpan</button>
+              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
               @endif
               @if($data->id && Perm::can(['kategoriLaundry_hapus']))
-                <a href="#" id="delete" type="button" class="btn btn-danger">Hapus</a>
+                <a href="#" class="btn btn-sm btn-danger" 
+                    delete-title="Konfirmasi Hapus Data"
+                  delete-action="{{ action('LCategoryController@postDelete', array('id' => $data->id)) }}"
+                  delete-message="Apakah anda yakin untuk menghapus data ini?"
+                  delete-success-url="{{ action('LCategoryController@index') }}">
+                  <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
               @endif
             </form>
           </div>
@@ -77,14 +82,7 @@
 @section('form-js')
 <script>
     $(document).ready(function (){
-      $('#delete').click(function(){
-        modalPopup('Hapus Data'
-          , '{{action("LCategoryController@postDelete")}}'
-          , $('#csid').val()
-          , 'Hapus'
-          , 'Delete'
-          , $('[name=lcategory_name]').val())
-      });
-    });
+    
+    })
 </script>
 @endsection

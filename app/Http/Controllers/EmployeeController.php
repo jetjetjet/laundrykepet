@@ -9,9 +9,9 @@ use Auth;
 
 class EmployeeController extends Controller
 {
-    public function index()
+  public function index()
   {
-      return view('Employee.index');
+    return view('Employee.index');
   }
 
   public function getEmployeeLists(Request $request){
@@ -54,9 +54,10 @@ class EmployeeController extends Controller
     return view('Employee.edit')->with('data', $data);
   }
 
-  public function postDelete(Request $request){
-    $id = $request->input('id');
-
+  public function postDelete(Request $request, $id = null)
+  {
+    $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
+        
     try{
       $emp = Employee::where('id',$id)->where('employee_active', '1')->firstOrFail();
       $emp->update([
@@ -64,10 +65,12 @@ class EmployeeController extends Controller
         'employee_modified_by' => Auth::user()->getAuthIdentifier(),
         'employee_modified_at' => now()->toDateTimeString()
       ]);
-      $request->session()->flash('successMessages', 'Data ' . $emp->employee_name . ' berhasil dihapus.');
-      return redirect(action('EmployeeController@index'));
+      $result['success'] = true;
+      $result['successMessages'] = 'Data ' . $emp->employee_name . ' berhasil dihapus.';
+      return response()->json($result);
     } catch (\Exception $e) {
-      return redirect()->back()->with(['errorMessages' => $e->getMessage()]);
+      $result['errorMessages'] = $e->getMessage();
+      return response()->json($result);
     }
   }
 

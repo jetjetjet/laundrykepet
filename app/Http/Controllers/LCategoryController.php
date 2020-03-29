@@ -84,7 +84,6 @@ class LCategoryController extends Controller
 
   public function postDelete(Request $request, $id = null)
   {
-    $id = $request->input('id');
     $category = LCategory::where('lcategory_active', '1')->where('id', $id)->first();
 
     if($category == null){
@@ -92,14 +91,19 @@ class LCategoryController extends Controller
       return redirect(action('LCategoryController@index'));
     }
 
-    $category->update([
-      'lcategory_active' => '0',
-      'lcategory_modified_by' => Auth::user()->getAuthIdentifier(),
-      'lcategory_modified_at' => now()->toDateTimeString()
-    ]);
-
-    $request->session()->flash('successMessages', 'Data ' . $category->lcategory_name . ' berhasil dihapus.');
-    return redirect(action('LCategoryController@index'));
+    try{
+      $category->update([
+        'lcategory_active' => '0',
+        'lcategory_modified_by' => Auth::user()->getAuthIdentifier(),
+        'lcategory_modified_at' => now()->toDateTimeString()
+      ]);
+      $result['success'] = true;
+      $result['successMessages'] = 'Data ' . $category->lcategory_name . ' berhasil dihapus.';
+      return response()->json($result);
+    } catch (\Exception $e){
+      array_push($result['errorMessages'], $e->getMessage());
+      return response()->json($result);
+    }
   }
 
   public function postEdit(Request $request, $id = null){

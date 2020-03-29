@@ -55,9 +55,8 @@ class CustomersController extends Controller
     return view('Customers.edit')->with('data', $data);
   }
 
-  public function postDelete(Request $request){
-    $id = $request->input('id');
-
+  public function postDelete(Request $request, $id = null){
+    $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
     try{
       $cust = Customer::where('id',$id)->where('customer_active', '1')->firstOrFail();
       $cust->update([
@@ -65,10 +64,13 @@ class CustomersController extends Controller
         'customer_modified_by' => Auth::user()->getAuthIdentifier(),
         'customer_modified_at' => now()->toDateTimeString()
       ]);
-      $request->session()->flash('successMessages', 'Data ' . $cust->customer_name . ' berhasil dihapus.');
-      return redirect(action('CustomersController@index'));
+
+      $result['success'] = true;
+      $result['successMessages'] = 'Data ' . $cust->customer_name . ' berhasil dihapus.';
+      return response()->json($result);
     } catch (\Exception $e) {
-      return redirect()->back()->with(['errorMessages' => $e->getMessage()]);
+      $result['errorMessages'] = $e->getMessage();
+      return response()->json($result);
     }
   }
 

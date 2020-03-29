@@ -38,7 +38,7 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::get('Customers/Edit/{id?}', 'CustomersController@getEdit');
     Route::get('Customers/SearchCust', 'CustomersController@searchCustomer');
     Route::post('Customers/Save/{id?}', 'CustomersController@postEdit');
-    Route::post('Customers/Delete', 'CustomersController@postDelete');
+    Route::post('Customers/Delete/{id?}', 'CustomersController@postDelete');
 
     Route::get('Employee/', 'EmployeeController@index')->middleware('can:karyawan_daftar');
     Route::get('Employee/Lists', 'EmployeeController@getEmployeeLists')->middleware('can:karyawan_daftar');

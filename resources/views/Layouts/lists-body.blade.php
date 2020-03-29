@@ -21,6 +21,12 @@
           {{ Session::get('errorMessages') }}
     </div>
   @endif
+  @if (!empty($error))  
+  <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ $error }}
+    </div>
+  @endif
   <div class="container-fluid">
     @yield('container')
   </div>

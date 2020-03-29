@@ -19,25 +19,30 @@
                 <label for="nama">Nama</label>
                 <input type="text" name="user_name" value="{{ $data->user_name }}" class="form-control" id="nama" placeholder="Username">
               </div>
-              <div class="form-group" style="display : {{ !empty($data->id) ? 'none' : '' }}">
-                <label for="nama">Password</label>
-                <input type="text" name="user_password" class="form-control" id="user_password" placeholder="Nama Lengkap" {{ empty($data->id) ? 'required' : '' }} >
-              </div>
               <div class="form-group">
                 <label for="nama">Nama Lengkap</label>
                 <input type="text" name="user_full_name" value="{{  old('user_full_name', $data->user_full_name) }}" class="form-control" id="user_full_name" placeholder="Nama Lengkap">
               </div>
+              <div class="form-group" style="display : {{ !empty($data->id) ? 'none' : '' }}">
+                <label for="nama">Password</label>
+                <input type="text" name="user_password" class="form-control" id="user_password" placeholder="Password" {{ empty($data->id) ? 'required' : '' }} >
+              </div>
               <div class="form-group">
                 <label for="kontak">Kontak</label>
-                <input type="text" name="user_phone" value="{{ $data->user_phone }}" class="form-control" id="kontak" placeholder="Kontak Pelanggan">
+                <input type="text" name="user_phone" value="{{ $data->user_phone }}" class="form-control" id="kontak" placeholder="Nomor Kontak">
               </div>
               <div class="form-group">
                 <label for="alamat">Alamat</label>
                 <textarea class="form-control" rows="2" placeholder="Alamat" name="user_address">{{ $data->user_address }}</textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Simpan</button>
+              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
               @if($data->id)
-                <a href="#" id="delete" type="button" class="btn btn-danger">Hapus</a>
+                <a href="#" class="btn btn-sm btn-danger" 
+                    delete-title="Konfirmasi Hapus Data"
+                  delete-action="{{ action('UserController@postDelete', array('id' => $data->id)) }}"
+                  delete-message="Apakah anda yakin untuk menghapus data ini?"
+                  delete-success-url="{{ action('UserController@index') }}">
+                  <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
                 <a href="#" id="changePassword" type="button" class="btn btn-success" style="position: absolute; right: 10px;">Ubah Password</a>
               @endif
             </form>
@@ -75,38 +80,40 @@
       @endif
     </div>
   </div>
+
+  <div id="passPopup" style="display:none;">
+  <div class="form-horizontal">
+    <div class="form-group required">
+      <label for="nama">Password Baru</label>
+      <input type="hidden"  name="modal" value="1"  class="form-control">
+      <input type="text" name="user_password" class="form-control" placeholder="Password Baru" >
+    </div>
+  </div>
+</div>
 @endsection
 
 
 @section('form-js')
 <script>
     $(document).ready(function (){
-      
-      $('#delete').click(function(){
-        modalPopup('Hapus Data'
-          , '{{action("UserController@postDelete")}}'
-          , $('#csid').val()
-          , 'Hapus'
-          , 'Delete'
-          , $('#user_name').val())
-      });
-
       $('#changePassword').click(function(){
-        setTimeout(() => {
-          let dd = $('#uiModalInstance').find('.modal-body');
-                dd.append('<div class="form-group">');
-                dd.append('<label for="nama">Password Baru</label>');
-                dd.append('<input type="text" name="user_password" class="form-control" placeholder="Password Baru" >');
-                dd.append('</div>');
-        }, 100);
-        modalPopup('Ubah Password'
-          , '{{action("UserController@postChangePassword")}}'
-          , $('#csid').val()
-          , 'Ubah'
-          , null
-          , $('#user_name').val())
+        var modal = showPopupForm(
+        $(this),
+        { btnType: 'primary', keepOpen: true },
+        'Ubah Password User',
+        $('#passPopup'),
+        '{{ action("UserController@postChangePassword") }}' + '/' + $('#csid').val(),
+        function ($form){
+            return {
+              user_password: $form.find('[name=user_password]').val(),
+              modal: $form.find('[name=modal]').val()
+            };
+        },
+        //callback
+        function (data){
+            toastr.success(data.successMessages)
+        });
       });
-      
     });
 </script>
 @endsection

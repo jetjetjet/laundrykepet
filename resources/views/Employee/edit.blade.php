@@ -38,11 +38,16 @@
               </div>
               <div class="form-group" style="display : {{ $data->employee_type === 'Steam' ? 'none' : '' }}" id="gaji">
                 <label for="employee_sallary" id="empsal">Gaji</label>
-                <input type="text" name="employee_sallary" class="form-control" value="{{ old('employee_sallary', $data->employee_sallary) }}" id="employee_sallary" placeholder="Gaji Karyawan" >
+                <input type="number" name="employee_sallary" class="form-control" value="{{ old('employee_sallary', $data->employee_sallary) }}" id="employee_sallary" placeholder="Gaji Karyawan" >
               </div>
-              <button type="submit" class="btn btn-primary">Simpan</button>
-              @if($data->id)
-                <a href="#" id="delete" type="button" class="btn btn-danger">Hapus</a>
+              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @if($data->id) 
+                <a href="#" class="btn btn-sm btn-danger" 
+                    delete-title="Konfirmasi Hapus Data"
+                  delete-action="{{ action('EmployeeController@postDelete', array('id' => $data->id)) }}"
+                  delete-message="Apakah anda yakin untuk menghapus data ini?"
+                  delete-success-url="{{ action('EmployeeController@index') }}">
+                  <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
               @endif
             </form>
           </div>
@@ -79,26 +84,23 @@
       @endif
     </div>
   </div>
+
+  <div id="deletePopup" style="display:none;">
+    <div class="form-horizontal">
+      <p> Anda akan menghapus data ini, lanjutkan? </p>
+    </div>
+  </div>
 @endsection
 
 
 @section('form-js')
 <script>
     $(document).ready(function (){
-
+      $('[type=number]').setupMask(0);
       $('#tipe').on('change', function(){
         let tipe = $('#tipe').val();
         tipe === 'Laundry' ? $('#empsal').text('Gaji(Bulan) Khusus Laundry') : $('#empsal').text('') ;
         tipe === 'Steam' ? $('#gaji').hide() : $('#gaji').show() ;
-      });
-
-      $('#delete').click(function(){
-        modalPopup('Hapus Data'
-          , '{{action("EmployeeController@postDelete")}}'
-          , $('#csid').val()
-          , 'Hapus'
-          , 'Delete'
-          , $('#employee_name').val())
       });
     });
 </script>

@@ -103,46 +103,52 @@ class UserController extends Controller
   }
 
   public function postDelete (Request $request, $id = null){
-    $id = $request->input('id');
     $user = User::where('user_active', '1')->where('id', $id)->firstOrFail();
 
     if($user == null){
-      $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
-      return redirect(action('UserController@index'));
+      array_push($result['errorMessages'], 'Data tidak ditemukan.');
+      return response()->json($result);
     }
 
-    if($user->id == 1){
-      $request->session()->flash('errorMessages', 'Data Karyawan ' . $user->user_name . ' tidak dapat dihapus!');
-      return redirect(action('UserController@getEdit', array('id' => $user->id)));
+    try{
+      $user->update([
+        'user_active' => '0',
+        'user_modified_by' => Auth::user()->getAuthIdentifier(),
+        'user_modified_at' => now()->toDateTimeString()
+      ]);
+
+      $result['success'] = true;
+      $result['successMessages'] = 'Data ' . $user->user_name . ' berhasil dihapus.';
+      return response()->json($result);
+    } catch (\Exception $e){
+      array_push($result['errorMessages'], $e->getMessage());
+      return response()->json($result);
     }
-
-    $user->update([
-      'user_active' => '0',
-      'user_modified_by' => Auth::user()->getAuthIdentifier(),
-      'user_modified_at' => now()->toDateTimeString()
-    ]);
-
-    $request->session()->flash('successMessages', 'Data ' . $user->user_name . ' berhasil dihapus.');
-    return redirect(action('UserController@index'));
   }
 
   public function postChangePassword (Request $request, $id = null){
-    $id = $request->input('id');
+    $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
     $user = User::where('user_active', '1')->where('id', $id)->firstOrFail();
 
     if($user == null){
-      $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
-      return redirect(action('UserController@index'));
+      array_push($result['errorMessages'], 'Data tidak ditemukan.');
+      return response()->json($result);
     }
     
-    $user->update([
-      'user_password' => Hash::make($request->user_password),
-      'user_modified_by' => Auth::user()->getAuthIdentifier(),
-      'user_modified_at' => now()->toDateTimeString()
-    ]);
+    try{
+      $user->update([
+        'user_password' => Hash::make($request->user_password),
+        'user_modified_by' => Auth::user()->getAuthIdentifier(),
+        'user_modified_at' => now()->toDateTimeString()
+      ]);
 
-    $request->session()->flash('successMessages', 'Password ' . $user->user_name . ' berhasil diubah.');
-    return redirect(action('UserController@getEdit', array('id' => $user->id)));
+      $result['success'] = true;
+      $result['successMessages'] = 'Password ' . $user->user_name . ' berhasil diubah.';
+      return response()->json($result);
+    } catch (\Exception $e){
+      array_push($result['errorMessages'], $e->getMessage());
+      return response()->json($result);
+    }
   }
 
 }
