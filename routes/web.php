@@ -70,6 +70,12 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Role/Save', 'RoleController@postEdit')->middleware('can:peran_simpan');
     Route::post('Role/Delete/{id?}', 'RoleController@postDelete')->middleware('can:peran_hapus');
 
+    Route::get('SCategory/','SCategoryController@index');
+    Route::get('SCategory/List','SCategoryController@getGrid');
+    Route::get('SCategory/Edit/{id?}', 'SCategoryController@getEdit');
+    Route::post('Scategory/Save/{id?}', 'SCategoryController@postEdit');
+    Route::post('Scategory/Delete/{id?}', 'SCategoryController@postDelete');
+
     Route::get('Users/', 'UserController@index');
     Route::get('Users/Lists', 'UserController@getUserLists');
     Route::get('Users/Edit/{id?}', 'UserController@getEdit');
