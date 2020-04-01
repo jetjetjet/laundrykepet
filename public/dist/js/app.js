@@ -161,7 +161,6 @@ function showModal(title, content, options, callback){
   $modalTitle.html(title);
   var $modalBody = $modal.find('.modal-body');
   $modalBody.html(content);
-
   $modal.find('.modal-action-cancel').removeClass('d-none');
   $actionBtn = $modal.find('.modal-action-yes');
   if (options.caption){
@@ -242,63 +241,206 @@ function showPopupForm($btn, options, title, $popup, postUrl, getPostDataFn, suc
   return modal;
 }
 
-window.wblgstc = {
-  setupSuggestionsById: function ($search, $searchId, queryUrlFn, displayFn, onSelectedFn, $delay){
-    if ($searchId){
-        $search.data('selectedTypeahead', { id: $searchId.val() });
-    }
-    
-    return $search
-    .typeahead({
-      minLength: 0,
-      items: 10,
-      delay: $delay === "undefined" ? 100 : $delay,
-      showHintOnFocus: true,
-      displayText: displayFn,
-      highlighter: function (item){
-        /* prevent escape html */ 
-        return item;
-      },
-      source: function (query, process){
-        if (queryUrlFn(query, $search) == null) return;
+function submitPopup($btn, btnType, content, postUrl, failCallbackFn, options, modalOptions){
+  var confirmOptions = { btnType: btnType, keepOpen: true, noClickOutside: true },
+    mergedModalOptions = Object.assign({}, confirmOptions, modalOptions);
+    showModalPopup($('[locale=wblgstc]').attr('fields-confirm'), content, mergedModalOptions, function (e){
+    $btn.prop('disabled', true);
 
-        return $.get(queryUrlFn(query, $search), function (data){
-          return process(data);
-        });
-      },
-      afterSelect: function (item){
-        $search.data('selectedTypeahead', item);
-        updateSelectedItem(item);
-      },
-      matcher: function (item){
-        return true;
-      }
-    })
-    .typeaheadX()
-    .keyup(function (e){
-        if (e.keyCode === 27){
-          $search.data('selectedTypeahead', null);
-          updateSelectedItem(null);
-          $(this).val('');
-        }
-    })
-    .blur(function (){
-      if (!$(this).val().trim()){
-        $search.data('selectedTypeahead', null)
-        updateSelectedItem(null);
-      } else if (!$search.data('selectedTypeahead')){
-        $(this).val('');
-      }
-    });
+    // Shows waiting info.
+    e.confirmBtn.prop('disabled', true);
+    e.modalTitle.html($('[locale=wblgstc]').attr('messages-pleaseWait'))
+    e.modalBody.html('<div class="progress"><div class="progress-bar progress-bar-striped active" style="width: 100%"></div></div>');
 
-    function updateSelectedItem(selectedItem){
-      $searchId.val(selectedItem ? selectedItem.id : null);
-      if (onSelectedFn){
-        onSelectedFn(selectedItem, $search);
+    $.post(
+        postUrl,
+        options && options.postData ? (typeof options.postData === 'function' ? options.postData($btn) : options.postData) : null,
+        function (data){
+          $btn.prop('disabled', false);
+
+          // Closes current modal.
+          e.close();
+
+          if (!data) return;
+          if (!data.success){
+            if (failCallbackFn){
+              failCallbackFn(data);
+            } else {
+              showErrorMessages(data);
+            }
+          } else {
+            var messages = [];
+            if (data.successMessages && data.successMessages.length){
+              toastr.success(data.successMessages)
+            }
+
+            if (data.errorMessages && data.errorMessages.length){
+              messages = messages.concat(data.errorMessages.map(function (val){
+                return { type: 'danger', message: val };
+              }));
+            }
+            setTimeout(() => {
+              location.reload();
+            }, 1500);
+          }
       }
-    }
+    );
+  });
+}
+
+function showModalPopup (title, content, options, callback, callback2, callbackCancel){
+  $modal = cloneModal();
+  $modal.modal({
+      show: false,
+      backdrop: options.noClickOutside ? 'static' : true,
+      keyboard: options.noClickOutside ? false : true
+  });
+
+  // Draws text.
+  var $modalTitle = $modal.find('.modal-title');
+  $modalTitle.html(title);
+  var $modalBody = $modal.find('.modal-body');
+  $modalBody.html(content);
+
+  // Shows and attaches click event.
+  $modal.find('.modal-action-cancel').removeClass('d-none');
+  $actionBtn = $modal.find('.modal-action-yes');
+  if (options.caption){
+       $actionBtn.text(options.caption);
   }
-};
+
+  if (options.modalSize){
+       $modal.find('.modal-dialog').addClass(options.modalSize);
+  }
+
+  $actionBtn
+      .removeClass('d-none')
+      .addClass('btn-' + ((typeof options === 'object' ? options.btnType : options) || 'primary'));
+
+  if (callback){
+      $modal.find('.modal-action-yes').click(function (){
+          callback({ 
+              confirmBtn: $(this), 
+              modalTitle: $modalTitle, 
+              modalBody: $modalBody,
+              options: options,
+              close: function (){
+                  $modal.modal('hide');
+                  $('#uiModalInstance').remove();
+                  $('.modal-backdrop').remove();
+              }
+          });
+          if (!options || typeof options !== 'object' || !options.keepOpen){
+              $modal.modal('hide');
+          }
+      });
+  }
+
+  if (callback2){
+      $actionBtn2 = $modal.find('.modal-action-yes-option2');
+      if (options.caption2){
+          $actionBtn2.text(options.caption2);
+      }
+
+      $actionBtn2
+          .removeClass('d-none')
+          .addClass('btn-' + ((typeof options === 'object' ? options.btnType2 : options) || 'primary'));
+      $actionBtn2.click(function (){
+          callback2({
+              confirmBtn: $(this),
+              modalTitle: $modalTitle,
+              modalBody: $modalBody,
+              options: options,
+              close: function (){
+                  $modal.modal('hide');
+                  $('#uiModalInstance').remove();
+                  $('.modal-backdrop').remove();
+              }
+          });
+          if (!options || typeof options !== 'object' || !options.keepOpen){
+              $modal.modal('hide');
+          }
+      });
+  }
+
+  $modal.on('.d-none.bs.modal', function (){
+      if (callbackCancel && typeof callbackCancel === 'function'){
+          callbackCancel();
+      }
+  });
+
+  // Shows modal.
+  $modal.modal('show');
+  if (options.noAutoFocus){
+      setTimeout(function (){
+          $modalBody.find('input[type=text]:visible:not([readonly]):not([disabled]),select:visible:not([disabled]),textarea:visible:not([readonly])').first().focus();
+      }, 500);
+  }
+
+  return {
+      modalTitle: $modalTitle, 
+      modalBody: $modalBody,
+      actionBtn: $actionBtn
+  };
+}
+
+// window.wblgstc = {
+//   setupSuggestionsById: function ($search, $searchId, queryUrlFn, displayFn, onSelectedFn, $delay){
+//     if ($searchId){
+//         $search.data('selectedTypeahead', { id: $searchId.val() });
+//     }
+    
+//     return $search
+//     .typeahead({
+//       minLength: 0,
+//       items: 10,
+//       delay: $delay === "undefined" ? 100 : $delay,
+//       showHintOnFocus: true,
+//       displayText: displayFn,
+//       highlighter: function (item){
+//         /* prevent escape html */ 
+//         return item;
+//       },
+//       source: function (query, process){
+//         if (queryUrlFn(query, $search) == null) return;
+
+//         return $.get(queryUrlFn(query, $search), function (data){
+//           return process(data);
+//         });
+//       },
+//       afterSelect: function (item){
+//         $search.data('selectedTypeahead', item);
+//         updateSelectedItem(item);
+//       },
+//       matcher: function (item){
+//         return true;
+//       }
+//     })
+//     .typeaheadX()
+//     .keyup(function (e){
+//         if (e.keyCode === 27){
+//           $search.data('selectedTypeahead', null);
+//           updateSelectedItem(null);
+//           $(this).val('');
+//         }
+//     })
+//     .blur(function (){
+//       if (!$(this).val().trim()){
+//         $search.data('selectedTypeahead', null)
+//         updateSelectedItem(null);
+//       } else if (!$search.data('selectedTypeahead')){
+//         $(this).val('');
+//       }
+//     });
+
+//     function updateSelectedItem(selectedItem){
+//       $searchId.val(selectedItem ? selectedItem.id : null);
+//       if (onSelectedFn){
+//         onSelectedFn(selectedItem, $search);
+//       }
+//     }
+//   }
+// };
 
 function cloneModal(){
   $('#uiModalInstance').remove();
@@ -309,6 +451,26 @@ function cloneModal(){
 
   return $modal;
 }
+
+$.fn.setupPopupForm = function (btnType, content, postUrl, failCallbackFn, options, beforeFunction){
+  $(this).click(function (){
+    if ($.isFunction(beforeFunction)) {
+      //return false stop executing
+      if(!beforeFunction())
+        return false;
+    }
+
+    if ($('form').find('[data-has-changed=1]:first').length){
+      toastr.success('Simpan perubahan terlebih dahulu.')
+    }
+
+    if (options && options.validateFormFirst && !$('form').valid()) return;
+
+    submitPopup($(this), btnType, content, postUrl, failCallbackFn, options);
+  });
+
+  return $(this);
+};
 
 $.fn.setupMask = function (precision){
   $(this).each(function (){

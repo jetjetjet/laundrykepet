@@ -14,7 +14,8 @@ class EmployeeController extends Controller
     return view('Employee.index');
   }
 
-  public function getEmployeeLists(Request $request){
+  public function getEmployeeLists(Request $request)
+  {
     $data = Employee::join('users as cr', 'employee_created_by', 'cr.id')
       ->leftJoin('users as mod', 'employee_modified_by', 'mod.id')
       ->where('employee_active', '1')
@@ -34,7 +35,8 @@ class EmployeeController extends Controller
     return response()->json($grid);
   }
 
-  public function getEdit(Request $request, $id = null){
+  public function getEdit(Request $request, $id = null)
+  {
     $data = new \stdClass();
     $data = Employee::getFields($data);
 
@@ -74,7 +76,8 @@ class EmployeeController extends Controller
     }
   }
 
-  public function postEdit(Request $request){
+  public function postEdit(Request $request)
+  {
     $rules = array(
       'employee_name' => 'required',
       'employee_type' => 'required'
@@ -122,6 +125,19 @@ class EmployeeController extends Controller
       }
     }catch(\Exception $e){
       return redirect()->back()->with(['errorMessages' => $e->getMessage()]);
+    }
+  }
+
+  public function searchEmployee(Request $request)
+  {
+    if ($request->has('q')) {
+      $cari = $request->q;
+      $data = Employee::
+        whereRaw('UPPER(employee_name) LIKE UPPER(\'%'. $cari .'%\')')
+        ->where('employee_active', '1')
+        ->select('id', 'employee_name')
+        ->get();
+      return response()->json($data);
     }
   }
 }

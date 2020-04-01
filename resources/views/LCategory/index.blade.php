@@ -13,7 +13,6 @@
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
-  @endif
   <div class="col-12">
     <div class="card">
       <div class="card-body">
@@ -21,7 +20,7 @@
           <thead>
           <tr>
             <th>Nama Kategori</th>
-            <th>Hari Pengerjaan</th>
+            <!-- <th>Hari Pengerjaan</th> -->
             <th>Harga</th>
             <th>Tgl Dibuat</th>
             <th>Dibuat Oleh</th>
@@ -52,10 +51,10 @@
           },
           searchText: true
         },
-        { 
-            data: 'lcategory_days',
-            searchText: true
-        },
+        // { 
+        //     data: 'lcategory_days',
+        //     searchText: true
+        // },
         { 
             data: 'lcategory_price',
             searchText: true

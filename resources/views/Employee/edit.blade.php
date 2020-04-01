@@ -22,10 +22,6 @@
                 <input type="text" name="employee_name" value="{{ $data->employee_name }}" class="form-control" id="nama" placeholder="Username">
               </div>
               <div class="form-group">
-                <label for="nama">Kontak</label>
-                <input type="text" name="employee_contact" value="{{ old('employee_contact', $data->employee_contact) }}" class="form-control" id="employee_contact" placeholder="Nomor Kontak" >
-              </div>
-              <div class="form-group">
                 <label for="alamat">Alamat</label>
                 <textarea class="form-control" rows="2" placeholder="Alamat" name="employee_address">{{ $data->employee_address }}</textarea>
               </div>

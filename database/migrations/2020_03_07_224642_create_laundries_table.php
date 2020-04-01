@@ -24,8 +24,8 @@ class CreateLaundriesTable extends Migration
             $table->boolean('laundry_paidoff')->nullable();
             $table->boolean('laundry_delivery')->nullable();
 
-            // $table->dateTime('laundry_executed_at')->nullable();
-            // $table->integer('laundry_executed_by')->nullable();
+            $table->dateTime('laundry_executed_at')->nullable();
+            $table->integer('laundry_executed_by')->nullable();
 
             // $table->dateTime('laundry_settled_at')->nullable();
             // $table->integer('laundry_settled_by')->nullable();
@@ -33,8 +33,8 @@ class CreateLaundriesTable extends Migration
             $table->dateTime('laundry_finished_at')->nullable();
             $table->integer('laundry_finished_by')->nullable();
 
-            $table->dateTime('laundry_delivered_by')->nullable();
-            $table->integer('laundry_delivered_at')->nullable();
+            $table->integer('laundry_delivered_by')->nullable();
+            $table->dateTime('laundry_delivered_at')->nullable();
 
             $table->boolean('laundry_active');
             $table->dateTime('laundry_created_at');

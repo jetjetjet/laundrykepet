@@ -20,7 +20,7 @@ class LCategoryController extends Controller
     if ($request->has('q')) {
       $cari = $request->q;
       $data = LCategory::
-        where('lcategory_name', 'LIKE', '%'.$cari.'%')
+        whereRaw('UPPER(lcategory_name) LIKE UPPER(\'%'.$cari.'%\')')
         ->where('lcategory_active', '1')
         ->select('id', 'lcategory_name', 'lcategory_price')
         ->get();
@@ -33,7 +33,7 @@ class LCategoryController extends Controller
     $data = LCategory::join('users as cr', 'lcategory_created_by', 'cr.id')
       ->leftJoin('users as mod', 'lcategory_modified_by', 'mod.id')
       ->where('lcategory_active', '1')
-      ->select('lcategories.id as id',
+      ->select('lcategories.id as id', 
         'lcategory_name',
         'lcategory_detail',
         'lcategory_price', 
@@ -43,8 +43,6 @@ class LCategoryController extends Controller
         'lcategory_modified_at');
       
     $count = $data->count();
-
-    //Filter
     $countFiltered = $data->count();
   
     $grid = new \stdClass();
@@ -84,6 +82,7 @@ class LCategoryController extends Controller
 
   public function postDelete(Request $request, $id = null)
   {
+    $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
     $category = LCategory::where('lcategory_active', '1')->where('id', $id)->first();
 
     if($category == null){

@@ -102,11 +102,17 @@ class UserController extends Controller
     }
   }
 
-  public function postDelete (Request $request, $id = null){
+  public function postDelete (Request $request, $id = null)
+  {
+    $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
     $user = User::where('user_active', '1')->where('id', $id)->firstOrFail();
 
     if($user == null){
       array_push($result['errorMessages'], 'Data tidak ditemukan.');
+      return response()->json($result);
+    }
+    if($user['id'] == 1){
+      array_push($result['errorMessages'], 'Super Admin tidak bisa dihapus!');
       return response()->json($result);
     }
 

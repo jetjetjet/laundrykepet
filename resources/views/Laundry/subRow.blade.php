@@ -2,33 +2,53 @@
   $row = isset($row) ? $row : new \stdClass();
   $rowIndex = isset($rowIndex) ? $rowIndex : null;
   $canSave = Perm::can(['laundry_simpan']);
+  $categoryId =  $row->ldetail_lcategory_id ?? '' ;
+  $categoryName =  $row->ldetail_lcategory_name ?? '' ;
+  $qty =  $row->ldetail_qty ?? '' ;
+  $total = $row->ldetail_total ?? '' ;
+  $price = $row->price ?? '';
+  $id = $row->id ?? '';
 ?>
 
-<tr>
+<tr class="subitem">
   <td>
-    <select class="form-control input-sm" name="dtl[{{ $rowIndex }}][ldetail_lcategory_name]">
+
+    <input type="hidden" name="dtl[{{ $rowIndex }}][id]" value="{{$id}}">
+    @if(empty($data->laundry_executed_at))
+    <select class="form-control input-sm" id="dtl[{{ $rowIndex }}][ldetail_lcategory_id]" name="dtl[{{ $rowIndex }}][ldetail_lcategory_id]">
+      @if($categoryId)
+      <option value="{{$categoryId}}"> {{ $categoryName }} </option>
+      @endif
+    </select>
+    @else
+      <input type="hidden" name="dtl[{{ $rowIndex }}][ldetail_lcategory_id]" value="{{$categoryId}}">
+      <input type="text" name="dtl[{{ $rowIndex }}][ldetail_lcategory_name]" value="{{ $categoryName }}" class="form-control input-sm text-right" maxlength="18"
+      autocomplete="off" readonly="readonly" />
+    @endif
   </td>
   <td>
-    <input type="number" name="dtl[{{ $rowIndex }}][ldetail_qty]" class="form-control input-sm text-right" maxlength="18"
-    autocomplete="off" />
+    <input type="number" name="dtl[{{ $rowIndex }}][ldetail_qty]" value="{{$qty}}" class="form-control input-sm text-right" maxlength="18"
+    autocomplete="off" {{ !empty($data->laundry_executed_at) ? 'readonly' : '' }} />
   </td>
   <td>
-    <input type="hidden" name="dtl[{{ $rowIndex }}][price]" />
-    <input type="number" name="dtl[][ldetail_price]" class="form-control input-sm text-right" maxlength="18"
+    <input type="hidden" value="{{$price}}" name="dtl[{{ $rowIndex }}][price]" />
+    <input type="number" name="dtl[{{ $rowIndex }}][ldetail_total]" value="{{$total}}" class="form-control input-sm text-right" maxlength="18"
     autocomplete="off" readonly />
   </td>
   @if ($canSave)
     <td>
       <div class="btn-group">
-        <button type="button" class="btn btn-xs btn-default" moveup-row>
+        @if(empty($data->laundry_executed_at) && Perm::can(['laundry_hapus']))
+        <!-- <button type="button" class="btn btn-xs btn-default" moveup-row>
             <span class="fa fa-long-arrow-up fa-fw"></span>
         </button>
         <button type="button" class="btn btn-xs btn-default" movedown-row>
             <span class="fa fa-long-arrow-down fa-fw"></span>
-        </button>
-        <button type="button" class="btn btn-xs btn-danger" remove-row>
-            <span class="fa fa-trash fa-fw"></span>
-        </button>
+        </button> -->
+          <button type="button" class="btn btn-xs btn-danger" remove-row>
+              <span class="fa fa-trash fa-fw"></span>
+          </button>
+        @endif
       <div>
     </td>
   @endif

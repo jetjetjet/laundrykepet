@@ -40,14 +40,21 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Customers/Save/{id?}', 'CustomersController@postEdit');
     Route::post('Customers/Delete/{id?}', 'CustomersController@postDelete');
 
+    Route::get('DataLaundry/', 'DataLaundryController@index');
+    Route::get('DataLaundry/Lists', 'DataLaundryController@getLists');
+
     Route::get('Employee/', 'EmployeeController@index')->middleware('can:karyawan_daftar');
     Route::get('Employee/Lists', 'EmployeeController@getEmployeeLists')->middleware('can:karyawan_daftar');
     Route::get('Employee/Edit/{id?}', 'EmployeeController@getEdit')->middleware('can:karyawan_simpan');
+    Route::get('Employee/Search', 'EmployeeController@searchEmployee');
     Route::post('Employee/Save/{id?}', 'EmployeeController@postEdit')->middleware('can:karyawan_simpan');
     Route::post('Employee/Delete/{id?}', 'EmployeeController@postDelete')->middleware('can:karyawan_hapus');
 
     Route::get('Laundry/Input/{id?}', 'LaundryController@input');
+    route::get('Laundry/Print/{id?}', 'LaundryController@generateReceipt');
     Route::post('Laundry/Save/{id?}', 'LaundryController@postEdit');
+    Route::post('Laundry/ChangeStatus/{id?}/{mode?}', 'LaundryController@postUbahStatus');
+    Route::post('Laundry/Delete/{id?}', 'LaundryController@postDelete');
 
     Route::get('LCategory/', 'LCategoryController@index')->middleware('can:kategoriLaundry_daftar');
     Route::get('LCategory/DropdownList', 'LCategoryController@getDropDownList');

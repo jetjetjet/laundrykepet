@@ -78,6 +78,29 @@
     </section>
   </div>
 
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="modalTitle"></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-d-none="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-sm d-none modal-action-cancel" data-dismiss="modal">Batal</button>
+          <button type="button" style="min-width: 75px;" class="btn btn-danger btn-sm d-none modal-action-delete font-bold"><span class="fa fa-trash fa-fw"></span>Hapus</button>
+          <button type="button" style="min-width: 75px;" class="btn btn-default btn-sm d-none modal-action-ok font-bold" data-dismiss="modal">Ok</button>
+          <button type="button" style="min-width: 75px;" class="btn btn-success btn-sm d-none modal-action-save font-bold">Simpan</button>
+          <button type="button" style="min-width: 75px;" class="btn btn-sm d-none modal-action-yes-option2 font-bold" >Simpan</button>
+          <button type="button" style="min-width: 75px;" class="btn btn-sm d-none modal-action-yes font-bold">Ya</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Main Footer -->
   <footer class="main-footer">
     <strong>Copyright &copy; 2020 <a href="#">Aplikasi</a>.</strong>
@@ -90,14 +113,16 @@
 
 <script src="{{ url('/') }}/plugins/jquery/jquery.min.js"></script>
 <script src="{{ url('/') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url('/') }}/plugins/jquery.validate.min.js"></script>
 <script src="{{ url('/') }}/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <script src="{{ url('/') }}/dist/js/adminlte.js"></script>
-<script src="{{ url('/') }}/dist/js/app.js"></script>
+<script src="{{ url('/') }}/plugins/moment/moment.min.js"></script>
 <script src="{{ url('/') }}/dist/js/typeahead.bundle.js"></script>
 <script src="{{ url('/') }}/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
 <script src="{{ url('/') }}/plugins/raphael/raphael.min.js"></script>
 
 <script src="{{ url('/') }}/plugins/toastr/toastr.min.js"></script>
 @yield('index-js')
+<script src="{{ url('/') }}/dist/js/app.js"></script>
 </body>
 </html>

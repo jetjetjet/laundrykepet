@@ -63,6 +63,11 @@
           <p>Input Laundry</p>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="{{ action("DataLaundryController@index") }}" class="nav-link {{ (request()->is('DataLaundry*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
+          <p>Data Laundry</p>
+        </a>
+      </li>
     </ul>
   </li>
   <li class="nav-item">

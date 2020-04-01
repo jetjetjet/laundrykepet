@@ -7,6 +7,7 @@ use App\Http\Model\Customer;
 use Carbon\Carbon;
 use Validator;
 use Auth;
+use DB;
 
 class CustomersController extends Controller
 {
@@ -135,7 +136,7 @@ class CustomersController extends Controller
     if ($request->has('q')) {
       $cari = $request->q;
       $data = Customer::
-        where('customer_name', 'LIKE', '%'.$cari.'%')
+        whereRaw('UPPER(customer_name) LIKE UPPER(\'%'. $cari .'%\')')
         ->where('customer_active', '1')
         ->select('id', 'customer_name')
         ->get();

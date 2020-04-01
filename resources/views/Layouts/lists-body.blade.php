@@ -2,6 +2,7 @@
 
 @section('index-css')
   <link rel="stylesheet" href="{{ url('/') }}/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+  @yield('css-page')
 @endsection
 
 @section('bread-master')

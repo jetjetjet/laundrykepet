@@ -14,6 +14,8 @@ class Laundry extends Model
     ,'laundry_paidoff'
     ,'laundry_delivery'
     ,'laundry_active'
+    ,'laundry_executed_at'
+    ,'laundry_executed_by'
     ,'laundry_finished_at'
     ,'laundry_finished_by'
     ,'laundry_delivered_at'
