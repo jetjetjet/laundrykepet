@@ -120,7 +120,7 @@ class SCategoryController extends Controller
   public function postDelete(Request $request, $id = null)
   {
     $rules = array('success'=> false,'errorMessages' =>array(), 'debugMassages' =>array());
-    $category = SCategory::where('lcategory_active', '1')->where('id', $id)->first();
+    $category = SCategory::where('scategory_active', '1')->where('id', $id)->first();
 
     if($category == null){
       $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
@@ -129,9 +129,9 @@ class SCategoryController extends Controller
 
     try{
       $category->update([
-        'lcategory_active' => '0',
-        'lcategory_modified_by' => Auth::user()->getAuthIdentifier(),
-        'lcategory_modified_at' => now()->toDateTimeString()
+        'scategory_active' => '0',
+        'scategory_modified_by' => Auth::user()->getAuthIdentifier(),
+        'scategory_modified_at' => now()->toDateTimeString()
       ]);
       $result['success'] = true;
       $result['successMessages'] = 'Data ' . $category->Scategory_name . ' berhasil dihapus.';
