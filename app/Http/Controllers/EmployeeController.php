@@ -130,11 +130,13 @@ class EmployeeController extends Controller
 
   public function searchEmployee(Request $request)
   {
+
     if ($request->has('q')) {
       $cari = $request->q;
       $data = Employee::
         whereRaw('UPPER(employee_name) LIKE UPPER(\'%'. $cari .'%\')')
         ->where('employee_active', '1')
+        ->where('employee_type', 'Laundry')
         ->select('id', 'employee_name')
         ->get();
       return response()->json($data);

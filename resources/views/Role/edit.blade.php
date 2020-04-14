@@ -42,6 +42,7 @@
                 <legend>Hak Akses</legend>
                 <div class="row row-sm mg-b-10">
                 <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
+                {{dd(Perm::all())}}
                 @foreach (Perm::all() as $key=>$group)
                 <div class="col-sm-4">
                   <label><b>{{ $group->module}}</b></label>

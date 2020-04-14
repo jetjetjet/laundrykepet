@@ -24,6 +24,13 @@
                 <textarea class="form-control" rows="2" placeholder="Detail" name="lcategory_detail">{{ $data->lcategory_detail }}</textarea>
               </div>
               <div class="form-group">
+                <label for="kontak">Tipe</label>
+                <select class="form-control" id="tipe" name="lcategory_type">
+                  <option value="Kilogram" {{ $data->lcategory_type == 'Kilogram' ? ' selected' : '' }} >Kilogram</option>
+                  <option value="Potong" {{ $data->lcategory_type == 'Potong' ? ' selected' : '' }} >Potong</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="nama">Hari Pengerjaan</label>
                 <input type="number" name="lcategory_days" value="{{  old('lcategory_days', $data->lcategory_days) }}" class="form-control" id="lcategory_days" placeholder="Jumlah Hari Pengerjaan">
               </div>
@@ -82,7 +89,7 @@
 @section('form-js')
 <script>
     $(document).ready(function (){
-    
+      $('[type=number]').setupMask(0);
     })
 </script>
 @endsection

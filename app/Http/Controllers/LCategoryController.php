@@ -22,7 +22,7 @@ class LCategoryController extends Controller
       $data = LCategory::
         whereRaw('UPPER(lcategory_name) LIKE UPPER(\'%'.$cari.'%\')')
         ->where('lcategory_active', '1')
-        ->select('id', 'lcategory_name', 'lcategory_price')
+        ->select('id', 'lcategory_name', 'lcategory_price', 'lcategory_days')
         ->get();
       return response()->json($data);
     }
@@ -124,6 +124,7 @@ class LCategoryController extends Controller
         $category = LCategory::create([
           'lcategory_name' => $request->lcategory_name,
           'lcategory_detail' => $request->lcategory_detail,
+          'lcategory_type' => $request->lcategory_type,
           'lcategory_days' => $request->lcategory_days,
           'lcategory_price' => $request->lcategory_price,
           'lcategory_active' => '1',
@@ -138,6 +139,7 @@ class LCategoryController extends Controller
         $category->update([
           'lcategory_name' => $request->lcategory_name,
           'lcategory_detail' => $request->lcategory_detail,
+          'lcategory_type' => $request->lcategory_type,
           'lcategory_days' => $request->lcategory_days,
           'lcategory_price' => $request->lcategory_price,
           'lcategory_modified_by' => Auth::user()->getAuthIdentifier(),
