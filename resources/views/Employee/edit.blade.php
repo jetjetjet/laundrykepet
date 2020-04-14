@@ -19,7 +19,7 @@
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <div class="form-group">
                 <label for="nama">Nama</label>
-                <input type="text" name="employee_name" value="{{ $data->employee_name }}" class="form-control" id="nama" placeholder="Username">
+                <input type="text" name="employee_name" value="{{ $data->employee_name }}" class="form-control" id="nama" placeholder="Nama Karyawan">
               </div>
               <div class="form-group">
                 <label for="alamat">Alamat</label>

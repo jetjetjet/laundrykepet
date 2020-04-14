@@ -25,7 +25,6 @@ class DataLaundryController extends Controller
         ->where('laundry_active', '1')
         ->select('laundries.id as id', 
           'laundry_invoice', 
-          'laundry_est_date', 
           'laundry_paid',
           'laundry_paidoff',
           'laundry_delivery',
@@ -34,8 +33,9 @@ class DataLaundryController extends Controller
           'cust.customer_address as laundry_customer_address',
           DB::raw('case when laundry_executed_at is null then \'Draft\' 
             when laundry_executed_at is not null and laundry_finished_at is null then \'Diproses\'
-            when laundry_finished_at is not null then \'Selesai\'
+            when laundry_finished_at is not null and (laundry_delivered_at is null and laundry_taken_at is null) then \'Selesai\'
             when laundry_delivered_at is not null then \'Diantar\'
+            when laundry_taken_at is not null then \'Diambil\'
             else \' \' end as laundry_status'),
           'laundry_created_at');
 
@@ -44,29 +44,34 @@ class DataLaundryController extends Controller
           if (!isset($value->value)) continue;
           $trimmedText = trim($value->value);
           $text = strtolower(implode('%', explode(' ', $trimmedText)));
-
           $field = self::mapView2DatabaseName($value->field);
           if ($field == "laundry_status"){
             switch($text){
               case "draft":
-                $data->whereRaw('laundry_executed_at is null');
+                $data = $data->whereNull('laundry_executed_at');
               break;
               case "diproses":
-                $data->whereRaw('(laundry_executed_at is not null and laundry_finished_at is null)');
+                $data = $data->whereNotNull('laundry_executed_at')
+                  ->whereNull('laundry_finished_at');
               break;
               case "selesai":
-                $data->whereRaw('laundry_finished_at is not null');
+                $data = $data->whereNotNull('laundry_finished_at')
+                  ->whereNull('laundry_delivered_at')
+                  ->whereNull('laundry_taken_at');
               break;
               case "diantar":
-                $data->whereRaw('laundry_delivered_at is not null');
+                $data = $data->whereNotNull('laundry_delivered_at');
+              break;
+              case "diambil":
+                $data = $data->whereNotNull('laundry_taken_at');
               break;
               default:
             }
           } else if ($field == "laundry_paidoff"){
             if($text == "lunas"){
-              $data->where('laundry_paidoff', '1');
+              $data = $data->where('laundry_paidoff', '1');
             } else if ($text == "belum") {
-              $data->where('laundry_paidoff', '0');
+              $data = $data->where('laundry_paidoff', '0');
             }
           } else {
             $data->whereRaw('lower(' . $field . ') like ?', ['%' . $text . '%']);

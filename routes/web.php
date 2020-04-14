@@ -23,10 +23,9 @@ Route::post('login', 'LoginController@postLogin');
 
 Route::group(array('middleware' => 'auth'), function ()
 {
-    Route::get('/', function (){
-		return view('Home.Dashboard');
-    });
-
+    Route::get('/', 'HomeController@index');
+    Route::get('/Dashboar/Data', 'HomeController@getDataDash');
+    
     Route::get('Category/', 'CategoryController@index')->middleware('can:kategori_daftar');
     Route::get('Category/Lists', 'CategoryController@getCategoryLists');
     Route::get('Category/Edit/{id?}', 'CategoryController@getEdit');
@@ -54,6 +53,8 @@ Route::group(array('middleware' => 'auth'), function ()
     route::get('Laundry/Print/{id?}', 'LaundryController@generateReceipt');
     Route::post('Laundry/Save/{id?}', 'LaundryController@postEdit');
     Route::post('Laundry/ChangeStatus/{id?}/{mode?}', 'LaundryController@postUbahStatus');
+    Route::post('Laundry/Pickup/{id?}', 'LaundryController@postPickup');
+    Route::post('Laundry/Delivery/{id?}', 'LaundryController@postDelivery');
     Route::post('Laundry/Delete/{id?}', 'LaundryController@postDelete');
 
     Route::get('LCategory/', 'LCategoryController@index')->middleware('can:kategoriLaundry_daftar');

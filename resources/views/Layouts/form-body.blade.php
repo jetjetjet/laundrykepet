@@ -38,6 +38,7 @@
 @endsection
 
 @section('index-js')
+<script src="{{ url('/') }}/plugins/chart.js/Chart.min.js"></script>
 <script src="{{ url('/') }}/plugins/select2/js/select2.full.min.js"></script>
 <script src="{{ url('/') }}/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="{{ url('/') }}/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>

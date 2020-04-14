@@ -18,6 +18,8 @@ class Laundry extends Model
     ,'laundry_executed_by'
     ,'laundry_finished_at'
     ,'laundry_finished_by'
+    ,'laundry_taken_at'
+    ,'laundry_taken_by'
     ,'laundry_delivered_at'
     ,'laundry_delivered_by'
     ,'laundry_created_at'
@@ -46,5 +48,24 @@ class Laundry extends Model
       $model->sub = Array();
 
       return $model;
+  }
+
+  public function scopeLaundry($query)
+  {
+    return $query->where('laundry_active', '1');
+  }
+
+  public function scopeLaundryById($query, $id)
+  {
+    $q = $query->join('users as cr', 'laundry_created_by', 'cr.id')
+      ->join('customers as cus', 'laundry_customer_id', 'cus.id')
+      ->leftJoin('employees as dlv', 'laundry_delivered_by', 'dlv.id')
+      ->leftJoin('users as exe', 'laundry_executed_by', 'exe.id')
+      ->leftJoin('users as mod', 'laundry_modified_by', 'mod.id')
+      ->leftJoin('users as fin', 'laundry_finished_by', 'fin.id')
+      ->where([
+        'laundry_active' => '1',
+        'laundries.id' => $id]);
+    return $q;
   }
 }
