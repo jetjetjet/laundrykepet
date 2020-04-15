@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExpenseTable extends Migration
+class CreateExpensesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class CreateExpenseTable extends Migration
             $table->bigIncrements('id');
             $table->string('expense_name');
             $table->string('expense_detail');
-            $table->decimal('expense_price',16,2);
+            $table->decimal('expense_price',16,0);
             $table->boolean('expense_active',);
             $table->dateTime('expense_created_at');
             $table->integer('expense_created_by');

@@ -3,6 +3,7 @@
 namespace App\Http\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Laundry extends Model
 {
@@ -67,5 +68,63 @@ class Laundry extends Model
         'laundry_active' => '1',
         'laundries.id' => $id]);
     return $q;
+  }
+
+  public function scopeLaundryReport($query, $filter)
+  {
+    $q = $query
+      ->join('users as u', 'u.id', 'laundry_created_by')
+      ->join('customers as cs', 'cs.id', 'laundry_customer_id')
+      ->join(DB::raw('(select count(ldetail_lcategory_id) as total_item, sum(ldetail_total) as total_trx, ldetail_laundry_id from ldetails l2
+      where ldetail_active = \'1\'
+      group by ldetail_laundry_id) as ld'), 'laundries.id', 'ld.ldetail_laundry_id')
+      ->where('laundry_active', '1')
+      ->where('laundry_created_at', '>=', $filter->startDate)
+      ->where('laundry_created_at', '<', $filter->endDate);
+      if($filter->statusBayar && $filter->statusBayar != null){
+        $q = $q->where('laundry_paidoff', $filter->statusBayar);
+      }
+
+      if($filter->status && $filter->status != null){
+        switch($filter->status){
+          case "draft":
+            $q = $q->whereNull('laundry_executed_at');
+          break;
+          case "proses":
+            $q = $q->whereNotNull('laundry_executed_at')
+              ->whereNull('laundry_finished_at');
+          break;
+          case "selesai":
+            $q = $q->whereNotNull('laundry_finished_at')
+              ->whereNull('laundry_delivered_at')
+              ->whereNull('laundry_taken_at');
+          break;
+          case "antar":
+            $q = $q->whereNotNull('laundry_delivered_at');
+          break;
+          case "ambil":
+            $q = $q->whereNotNull('laundry_taken_at');
+          break;
+          default:
+        }
+      }
+
+      $q = $q->select(
+        'laundries.id as id',
+        'laundry_invoice',
+        'cs.customer_name',
+        'total_item',
+        DB::raw('case when laundry_paidoff is true then \'Lunas\' else \'Belum Lunas\' end as status_bayar'),
+        'laundry_paid',
+        DB::raw('total_trx - laundry_paid as selisih'),
+          'laundry_created_at',
+          'u.user_name as sales',
+        DB::raw('case when laundry_executed_at is null then \'Draft\' 
+          when laundry_executed_at is not null and laundry_finished_at is null then \'Diproses\'
+          when laundry_finished_at is not null and (laundry_delivered_at is null and laundry_taken_at is null) then \'Selesai\'
+          when laundry_delivered_at is not null then \'Diantar\'
+          when laundry_taken_at is not null then \'Diambil\'
+          else \' \' end as status')
+      );
   }
 }
