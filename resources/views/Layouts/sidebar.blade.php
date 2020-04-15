@@ -73,27 +73,6 @@
     </ul>
   </li>
   @endif
-<<<<<<< HEAD
-    
-  <li class="nav-item has-treeview menu-open">
-    <a href="#" class="nav-link ">
-      <i class="nav-icon fas fa-tshirt"></i>
-      <p>Laundry<i class="right fas fa-angle-left"></i></p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="{{ action("LaundryController@input") }}" class="nav-link {{ (request()->is('Laundry/Input*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
-          <p>Input Laundry</p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="{{ action("DataLaundryController@index") }}" class="nav-link {{ (request()->is('DataLaundry*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
-          <p>Data Laundry</p>
-        </a>
-      </li>
-    </ul>
-  </li>
-=======
   @if($laundry)
     <li class="nav-item has-treeview menu-open">
       <a href="#" class="nav-link {{ $laundryUrl ? 'active' : '' }}">
@@ -142,7 +121,6 @@
       </ul>
     </li>
   @endif
->>>>>>> 8610241b0d410c61b7721888b0c194e6d0d47636
   <li class="nav-item">
     <a href="{{ action("ExpenseController@index") }}" class="nav-link">
       <i class="nav-icon fas fa-th"></i>
