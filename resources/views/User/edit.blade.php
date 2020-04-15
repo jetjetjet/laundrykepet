@@ -35,15 +35,24 @@
                 <label for="alamat">Alamat</label>
                 <textarea class="form-control" rows="2" placeholder="Alamat" name="user_address">{{ $data->user_address }}</textarea>
               </div>
-              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @if(Perm::can(['user_simpan']))
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @endif
               @if($data->id)
-                <a href="#" class="btn btn-sm btn-danger" 
+                @if(Perm::can(['user_simpan']))
+                  <a href="#" id="changePassword" type="button" class="btn btn-success">Ubah Password</a>
+                  <a href="{{action('UserController@getEdit')}}" class="btn btn-sm btn-success" >
+                    <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
+                  </a>
+                @endif
+                @if(Perm::can(['user_hapus']))
+                <a href="#" class="btn btn-sm btn-danger float-right" 
                     delete-title="Konfirmasi Hapus Data"
                   delete-action="{{ action('UserController@postDelete', array('id' => $data->id)) }}"
                   delete-message="Apakah anda yakin untuk menghapus data ini?"
                   delete-success-url="{{ action('UserController@index') }}">
                   <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
-                <a href="#" id="changePassword" type="button" class="btn btn-success" style="position: absolute; right: 10px;">Ubah Password</a>
+                @endif
               @endif
             </form>
           </div>
@@ -66,7 +75,6 @@
             @if (!empty($data->user_modified_at))
             <div class="col-12">
               <label>Diubah Oleh</label>
-              
               <input type="text" class="form-control" value="{{ $data->user_modified_by}}" readonly>
             </div>
             <div class="col-12">

@@ -38,16 +38,23 @@
                 <label for="harga">Harga</label>
                 <input type="number" name="lcategory_price" value="{{ $data->lcategory_price }}" class="form-control" id="lcategory_price" placeholder="Harga">
               </div>
-              @if(Perm::can(['kategoriLaundry_simpan']))
-              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @if(Perm::can(['laundryKategori_simpan']))
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
               @endif
-              @if($data->id && Perm::can(['kategoriLaundry_hapus']))
-                <a href="#" class="btn btn-sm btn-danger" 
+              @if($data->id)
+                @if(Perm::can(['laundryKategori_simpan']))
+                <a href="{{action('LCategoryController@getEdit')}}" class="btn btn-sm btn-success" >
+                  <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
+                </a>
+                @endif
+                @if(Perm::can(['laundryKategori_hapus']))
+                <a href="#" class="btn btn-sm btn-danger float-right" 
                     delete-title="Konfirmasi Hapus Data"
                   delete-action="{{ action('LCategoryController@postDelete', array('id' => $data->id)) }}"
                   delete-message="Apakah anda yakin untuk menghapus data ini?"
                   delete-success-url="{{ action('LCategoryController@index') }}">
                   <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
+                @endif
               @endif
             </form>
           </div>

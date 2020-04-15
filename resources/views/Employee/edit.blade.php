@@ -36,14 +36,23 @@
                 <label for="employee_sallary" id="empsal">Gaji</label>
                 <input type="number" name="employee_sallary" class="form-control" value="{{ old('employee_sallary', $data->employee_sallary) }}" id="employee_sallary" placeholder="Gaji Karyawan" >
               </div>
-              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
-              @if($data->id) 
-                <a href="#" class="btn btn-sm btn-danger" 
+              @if(Perm::can(['karyawan_simpan']))
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @endif
+              @if($data->id)
+                @if(Perm::can(['karyawan_simpan']))
+                  <a href="{{action('EmployeeController@getEdit')}}" class="btn btn-sm btn-success" >
+                    <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
+                  </a>
+                @endif
+                @if(Perm::can(['karyawan_hapus']))
+                <a href="#" class="btn btn-sm btn-danger float-right" 
                     delete-title="Konfirmasi Hapus Data"
                   delete-action="{{ action('EmployeeController@postDelete', array('id' => $data->id)) }}"
                   delete-message="Apakah anda yakin untuk menghapus data ini?"
                   delete-success-url="{{ action('EmployeeController@index') }}">
                   <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
+                @endif
               @endif
             </form>
           </div>

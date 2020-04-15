@@ -26,62 +26,64 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::get('/', 'HomeController@index');
     Route::get('/Dashboar/Data', 'HomeController@getDataDash');
     
-    Route::get('Category/', 'CategoryController@index')->middleware('can:kategori_daftar');
-    Route::get('Category/Lists', 'CategoryController@getCategoryLists');
-    Route::get('Category/Edit/{id?}', 'CategoryController@getEdit');
-    Route::post('Category/Save/{id?}', 'CategoryController@postEdit');
-    Route::post('Category/Delete/{id?}', 'CategoryController@postDelete');
+    Route::get('Category/', 'CategoryController@index')->middleware('can:laundryKategori_list');
+    Route::get('Category/Lists', 'CategoryController@getCategoryLists')->middleware('can:laundryKategori_list');
+    Route::get('Category/Edit/{id?}', 'CategoryController@getEdit')->middleware('can:laundryKategori_lihat');
+    Route::post('Category/Save/{id?}', 'CategoryController@postEdit')->middleware('can:laundryKategori_simpan');
+    Route::post('Category/Delete/{id?}', 'CategoryController@postDelete')->middleware('can:laundryKategori_hapus');
 
-    Route::get('Customers/', 'CustomersController@index');
-    Route::get('Customers/Lists', 'CustomersController@getCustomerLists');
-    Route::get('Customers/Edit/{id?}', 'CustomersController@getEdit');
-    Route::get('Customers/SearchCust', 'CustomersController@searchCustomer');
-    Route::post('Customers/Save/{id?}', 'CustomersController@postEdit');
-    Route::post('Customers/Delete/{id?}', 'CustomersController@postDelete');
+    Route::get('Customers/', 'CustomersController@index')->middleware('can:pelanggan_list');
+    Route::get('Customers/Lists', 'CustomersController@getCustomerLists')->middleware('can:pelanggan_list');
+    Route::get('Customers/Edit/{id?}', 'CustomersController@getEdit')->middleware('can:pelanggan_lihat');
+    Route::get('Customers/SearchCust', 'CustomersController@searchCustomer')->middleware('can:pelanggan_cari');
+    Route::post('Customers/Save/{id?}', 'CustomersController@postEdit')->middleware('can:pelanggan_simpan');
+    Route::post('Customers/Delete/{id?}', 'CustomersController@postDelete')->middleware('can:pelanggan_hapus');
 
-    Route::get('DataLaundry/', 'DataLaundryController@index');
-    Route::get('DataLaundry/Lists', 'DataLaundryController@getLists');
+    Route::get('DataLaundry/', 'DataLaundryController@index')->middleware('can:laundry_list');
+    Route::get('DataLaundry/Lists', 'DataLaundryController@getLists')->middleware('can:laundry_list');
 
-    Route::get('Employee/', 'EmployeeController@index')->middleware('can:karyawan_daftar');
-    Route::get('Employee/Lists', 'EmployeeController@getEmployeeLists')->middleware('can:karyawan_daftar');
-    Route::get('Employee/Edit/{id?}', 'EmployeeController@getEdit')->middleware('can:karyawan_simpan');
-    Route::get('Employee/Search', 'EmployeeController@searchEmployee');
+    Route::get('Employee/', 'EmployeeController@index')->middleware('can:karyawan_list');
+    Route::get('Employee/Lists', 'EmployeeController@getEmployeeLists')->middleware('can:karyawan_list');
+    Route::get('Employee/Edit/{id?}', 'EmployeeController@getEdit')->middleware('can:karyawan_lihat');
+    Route::get('Employee/Search', 'EmployeeController@searchEmployee')->middleware('can:karyawan_cari');
     Route::post('Employee/Save/{id?}', 'EmployeeController@postEdit')->middleware('can:karyawan_simpan');
     Route::post('Employee/Delete/{id?}', 'EmployeeController@postDelete')->middleware('can:karyawan_hapus');
 
-    Route::get('Laundry/Input/{id?}', 'LaundryController@input');
-    route::get('Laundry/Print/{id?}', 'LaundryController@generateReceipt');
-    Route::post('Laundry/Save/{id?}', 'LaundryController@postEdit');
-    Route::post('Laundry/ChangeStatus/{id?}/{mode?}', 'LaundryController@postUbahStatus');
-    Route::post('Laundry/Pickup/{id?}', 'LaundryController@postPickup');
-    Route::post('Laundry/Delivery/{id?}', 'LaundryController@postDelivery');
-    Route::post('Laundry/Delete/{id?}', 'LaundryController@postDelete');
+    Route::get('Laundry/Input/{id?}', 'LaundryController@input')->middleware('can:laundry_lihat');
+    route::get('Laundry/Print/{id?}', 'LaundryController@generateReceipt')->middleware('can:laundry_cetak');
+    Route::post('Laundry/Save/{id?}', 'LaundryController@postEdit')->middleware('can:laundry_simpan');
+    Route::post('Laundry/ChangeStatus/{id?}/{mode?}', 'LaundryController@postUbahStatus')->middleware('can:laundry_ubahStatus');
+    Route::post('Laundry/Pickup/{id?}', 'LaundryController@postPickup')->middleware('can:laundry_antar');
+    Route::post('Laundry/Delivery/{id?}', 'LaundryController@postDelivery')->middleware('can:laundry_antar');
+    Route::post('Laundry/Delete/{id?}', 'LaundryController@postDelete')->middleware('can:laundry_hapus');
 
-    Route::get('LCategory/', 'LCategoryController@index')->middleware('can:kategoriLaundry_daftar');
+    Route::get('LCategory/', 'LCategoryController@index')->middleware('can:laundryKategori_list');
     Route::get('LCategory/DropdownList', 'LCategoryController@getDropDownList');
-    Route::get('LCategory/Lists', 'LCategoryController@getGrid')->middleware('can:kategoriLaundry_daftar');
-    Route::get('LCategory/Edit/{id?}', 'LCategoryController@getEdit')->middleware('can:kategoriLaundry_simpan');
-    Route::get('LCategory/SearchCategory', 'LCategoryController@getDropDownList')->middleware('can:kategoriLaundry_daftar');
-    Route::post('LCategory/Save/{id?}', 'LCategoryController@postEdit')->middleware('can:kategoriLaundry_simpan');
-    Route::post('LCategory/Delete/{id?}', 'LCategoryController@postDelete')->middleware('can:kategoriLaundry_hapus');
+    Route::get('LCategory/Lists', 'LCategoryController@getGrid')->middleware('can:laundryKategori_list');
+    Route::get('LCategory/Edit/{id?}', 'LCategoryController@getEdit')->middleware('can:laundryKategori_lihat');
+    Route::get('LCategory/SearchCategory', 'LCategoryController@getDropDownList')->middleware('can:laundryKategori_cari');
+    Route::post('LCategory/Save/{id?}', 'LCategoryController@postEdit')->middleware('can:laundryKategori_simpan');
+    Route::post('LCategory/Delete/{id?}', 'LCategoryController@postDelete')->middleware('can:laundryKategori_hapus');
 
-    Route::get('Role/','RoleController@index')->middleware('can:peran_daftar');
-    Route::get('Role/Lists', 'RoleController@getRoleLists')->middleware('can:peran_daftar');
-    Route::get('Role/Edit/{id?}', 'RoleController@getEdit')->middleware('can:peran_simpan');
+    Route::get('Role/','RoleController@index')->middleware('can:peran_list');
+    Route::get('Role/Lists', 'RoleController@getRoleLists')->middleware('can:peran_list');
+    Route::get('Role/Edit/{id?}', 'RoleController@getEdit')->middleware('can:peran_lihat');
     Route::post('Role/Save', 'RoleController@postEdit')->middleware('can:peran_simpan');
     Route::post('Role/Delete/{id?}', 'RoleController@postDelete')->middleware('can:peran_hapus');
 
-    Route::get('SCategory/','SCategoryController@index');
-    Route::get('SCategory/List','SCategoryController@getGrid');
-    Route::get('SCategory/Edit/{id?}', 'SCategoryController@getEdit');
-    Route::post('Scategory/Save/{id?}', 'SCategoryController@postEdit');
-    Route::post('Scategory/Delete/{id?}', 'SCategoryController@postDelete');
+    Route::get('SCategory/','SCategoryController@index')->middleware('can:steamKategori_list');
+    Route::get('SCategory/List','SCategoryController@getGrid')->middleware('can:steamKategori_list');
+    Route::get('SCategory/Edit/{id?}', 'SCategoryController@getEdit')->middleware('can:steamKategori_lihat');
+    Route::post('Scategory/Save/{id?}', 'SCategoryController@postEdit')->middleware('can:steamKategori_simpan');
+    Route::post('Scategory/Delete/{id?}', 'SCategoryController@postDelete')->middleware('can:steamKategori_hapus');
 
-    Route::get('Users/', 'UserController@index');
-    Route::get('Users/Lists', 'UserController@getUserLists');
-    Route::get('Users/Edit/{id?}', 'UserController@getEdit');
-    Route::post('Users/Save/{id?}', 'UserController@postEdit');
-    Route::post('Users/Delete/{id?}', 'UserController@postDelete');
-    Route::post('Users/ChangePassword/{id?}', 'UserController@postChangePassword');
+    Route::get('Users/', 'UserController@index')->middleware('can:user_list');
+    Route::get('Users/Lists', 'UserController@getUserLists')->middleware('can:user_list');
+    Route::get('Users/Edit/{id?}', 'UserController@getEdit')->middleware('can:user_lihat');
+    Route::post('Users/Save/{id?}', 'UserController@postEdit')->middleware('can:user_simpan');
+    Route::post('Users/Delete/{id?}', 'UserController@postDelete')->middleware('can:user_hapus');
+    Route::post('Users/ChangePassword/{id?}', 'UserController@postChangePassword')->middleware('can:user_simpan');
+
+    Route::get('Laporan/Laundry', 'ReportController@indexLaundry');
 
 });
