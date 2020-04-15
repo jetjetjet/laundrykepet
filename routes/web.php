@@ -76,6 +76,18 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Scategory/Save/{id?}', 'SCategoryController@postEdit');
     Route::post('Scategory/Delete/{id?}', 'SCategoryController@postDelete');
 
+    Route::get('Setting/','SettingController@index');
+    Route::get('Setting/List','SettingController@getGrid');
+    Route::get('Setting/Edit/{id?}', 'SettingController@getEdit');
+    Route::post('Setting/Save/{id?}', 'SettingController@postEdit');
+    Route::post('Setting/Delete/{id?}', 'SettingController@postDelete');
+
+    Route::get('Expense/','ExpenseController@index');
+    Route::get('Expense/List','ExpenseController@getGrid');
+    Route::get('Expense/Edit/{id?}', 'ExpenseController@getEdit');
+    Route::post('Expense/Save/{id?}', 'ExpenseController@postEdit');
+    Route::post('Expense/Delete/{id?}', 'ExpenseController@postDelete');
+
     Route::get('Users/', 'UserController@index');
     Route::get('Users/Lists', 'UserController@getUserLists');
     Route::get('Users/Edit/{id?}', 'UserController@getEdit');

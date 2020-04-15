@@ -48,10 +48,24 @@
         </a>
       </li>
     @endif
+  @if (Perm::can(['kategoristeam']))
+      <li class="nav-item">
+        <a href="{{ action("SCategoryController@index") }}" class="nav-link {{ (request()->is('SCategory*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
+          <p>Kategori Steam</p>
+        </a>
+      </li>
+    @endif
+    @if (Perm::can(['setting']))
+      <li class="nav-item">
+        <a href="{{ action("SettingController@index") }}" class="nav-link {{ (request()->is('setting*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
+          <p>Setting</p>
+        </a>
+      </li>
+    @endif
     </ul>
   </li>
   @endif
-
+    
   <li class="nav-item has-treeview menu-open">
     <a href="#" class="nav-link ">
       <i class="nav-icon fas fa-tshirt"></i>
@@ -69,6 +83,12 @@
         </a>
       </li>
     </ul>
+  </li>
+  <li class="nav-item">
+    <a href="{{ action("ExpenseController@index") }}" class="nav-link">
+      <i class="nav-icon fas fa-th"></i>
+      <p>Expense</p>
+    </a>
   </li>
   <li class="nav-item">
     <a href="{{ action("LoginController@getLogoff") }}" class="nav-link">
