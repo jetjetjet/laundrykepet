@@ -101,35 +101,30 @@
     <li class="nav-item has-treeview menu-{{(request()->is('Laporan*')) ? 'open' : 'close' }}">
       <a href="#" class="nav-link {{ (request()->is('Laporan*')) ? 'active' : '' }}">
         <i class="nav-icon fa fa-file-alt"></i>
-        <p>Laporan<i class="right fas fa-report"></i></p>
+        <p>Laporan<i class="right fas fa-angle-left"></i></p>
       </a>
       <ul class="nav nav-treeview">
         @if(Perm::can(['laporan_lihat']))
         <li class="nav-item">
-          <a href="{{ action("ReportController@indexLaundry") }}" class="nav-link {{ (request()->is('Laundry*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
+          <a href="{{ action("ReportController@getLaundryReport") }}" class="nav-link {{ (request()->is('Laporan/Laundry*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
             <p>Laporan Laundry</p>
-          </a>
-        </li>
-        @endif
-        @if(Perm::can(['laporan_lihat']))
-        <li class="nav-item">
-          <a href="{{ action("DataLaundryController@index") }}" class="nav-link {{ (request()->is('DataLaundry*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
-            <p>Data Laundry</p>
           </a>
         </li>
         @endif
       </ul>
     </li>
   @endif
-  <li class="nav-item">
-    <a href="{{ action("ExpenseController@index") }}" class="nav-link">
-      <i class="nav-icon fas fa-th"></i>
-      <p>Expense</p>
-    </a>
-  </li>
+  @if(Perm::can(['pengeluaran_lihat']))
+    <li class="nav-item">
+      <a href="{{ action("ExpenseController@index") }}" class="nav-link {{ (request()->is('Expense*')) ? 'active' : '' }}">
+        <i class="nav-icon fa fa-shopping-cart"></i>
+        <p>{{ trans('fields.expense') }}</p>
+      </a>
+    </li>
+  @endif
   <li class="nav-item">
     <a href="{{ action("LoginController@getLogoff") }}" class="nav-link">
-      <i class="nav-icon fas fa-th"></i>
+      <i class="nav-icon fa fa-sign-out-alt"></i>
       <p>Keluar</p>
     </a>
   </li>
