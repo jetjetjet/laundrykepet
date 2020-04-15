@@ -19,6 +19,8 @@ class CreateLaundryDetailsTable extends Migration
             $table->integer('ldetail_lcategory_id');
             $table->integer('ldetail_qty');
             $table->decimal('ldetail_total',16,0);
+            $table->dateTime('ldetail_start_date');
+            $table->dateTime('ldetail_end_date');
 
             $table->boolean('ldetail_active');
             $table->dateTime('ldetail_created_at');

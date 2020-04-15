@@ -11,33 +11,38 @@
     <div class="col-md-12">
       <div class="card-body" style="padding: 0.80rem;">
         <div class="btn-group">
-          @if(empty($data->laundry_executed_at))
+          @if(empty($data->laundry_executed_at) && Perm::can(['laundry_simpan']))
             <button class="btn btn-sm btn-success" id="simpan" type="button" data-saveMode="" disabled>
             <span class="fa fa-save fa-fw"></span>&nbsp;Simpan</button>
             &nbsp;
           @endif
-          @if(!empty($data->id))
-            <a href="{{action('LaundryController@generateReceipt') . '/' . $data->id }}" class="btn btn-sm btn-default" id="print" type="button" data-saveMode="" disabled>
+          @if(!empty($data->id) && Perm::can(['laundry_cetak']))
+            <a href="{{action('LaundryController@generateReceipt') . '/' . $data->id }}" target="_blank" class="btn btn-sm btn-default" id="print" type="button" data-saveMode="" disabled>
             <span class="fa fa-print fa-fw"></span>&nbsp;Cetak</a>
             &nbsp;
           @endif
-          @if(!empty($data->id) && empty($data->laundry_executed_at))
+          @if(!empty($data->id) && empty($data->laundry_executed_at) && Perm::can(['laundry_ubahStatus']))
             <button id="proses" class="btn btn-sm btn-primary" type="button">
               <span class="fa fa-check fa-fw"></span>&nbsp;Proses</button>
             &nbsp;
           @endif
-          @if(!empty($data->laundry_executed_at) && empty($data->laundry_finished_at))
+          @if(!empty($data->laundry_executed_at) && empty($data->laundry_finished_at) && Perm::can(['laundry_ubahStatus']))
             <button id="selesai" class="btn btn-sm btn-success" type="button">
             <span class="fa fa-check fa-fw"></span>&nbsp;Selesai</button>
             &nbsp;
           @endif
-          @if(!empty(($data->laundry_finished_at) && !empty($data->laundry_finished_at)) && $data->laundry_delivery)
-            <button id="antar" class="btn btn-sm btn-warning" type="button">
-            <span class="fa fa-check fa-fw"></span>&nbsp;Delivery</button>
+          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_delivered_at)) && $data->laundry_delivery && Perm::can(['laundry_antar']))
+            <button class="btn btn-sm btn-warning" type="button" data-toggle="modal" data-target="#modalDelivery">
+            <span class="fa fa-check fa-fw"></span>&nbsp;Antar</button>
+            &nbsp;
+          @endif
+          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_taken_at)) && !$data->laundry_delivery && Perm::can(['laundry_antar']))
+            <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#modalPickup">
+            <span class="fa fa-check fa-fw"></span>&nbsp;Pick-up</button>
             &nbsp;
           @endif
         </div>
-        @if(!empty($data->id) && empty($data->laundry_executed_at))
+        @if(!empty($data->id) && empty($data->laundry_executed_at) && Perm::can(['laundry_hapus']))
           <div class="float-right">
             <a href="#" class="btn btn-sm btn-danger" 
               delete-title="Konfirmasi Hapus Data Laundry"
@@ -51,7 +56,7 @@
     </div> 
 </div>  
 
-<form action="{{ action("LaundryController@postEdit") }}" method="POST" autocomplete="off" >
+<form id="mainForm" action="{{ action("LaundryController@postEdit") }}" method="POST" autocomplete="off" >
   <div class="row">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
@@ -88,28 +93,18 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>Tgl Selesai</label>
-                <div class="input-group input-group-sm">
-                @if(empty($data->laundry_executed_at))
-                  <input type="text" name="laundry_est_date" value="{{ $data->laundry_est_date }}" class="form-control" readonly />
-                @else
-                <input type="text"  value="{{ $data->laundry_est_date }}" class="form-control" readonly />
-                @endif
-                </div>
-              </div>
-              <div class="form-group">
                 <label>Antar ke alamat</label>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="laundry_delivery" id="laundry_delivery" checked="{{isset($data->laundry_delivery) ? 'checked' : '' }}" {{isset($data->laundry_executed_at) ? 'disabled' : '' }} />
-                  <label class="custom-control-label" id="deliv" for="laundry_delivery">{{isset($data->laundry_delivery) && $data->laundry_delivery == true ? 'Ya' : 'Tidak' }}</label>
-                </div>
+                  <select class="form-control" id="tipe" name="laundry_delivery" {{!empty($data->laundry_executed_at) ? 'disabled' : '' }}>
+                    <option value="true" {{ $data->laundry_delivery == true ? ' selected' : '' }}>Ya</option>
+                    <option value="false" {{ $data->laundry_delivery == false ? ' selected' : '' }}>Tidak</option>
+                  </select>
               </div>
             </div>
           </div>
         </div>
         <!-- Button Detail -->
         <div class="col-md-12" style="margin-bottom:8px;">
-        @if(Perm::can(['laundry_tambah']) && empty($data->laundry_executed_at))
+        @if(Perm::can(['laundry_simpan']) && empty($data->laundry_executed_at))
           <div class="float-right">
             <button type="button" class="btn btn-sm btn-success add-row" disabled>
               <span class="fa fa-plus fa-fw"></span>&nbsp; Tambah
@@ -128,7 +123,8 @@
                 <thead>
                   <tr>
                     <th>Kategori</th>
-                    <th>Jumlah/Kilo</th>
+                    <th>Tgl. Selesai</th>
+                    <th>Berat/Satuan</th>
                     <th>Total</th>
                     <th></th>
                   </tr>
@@ -149,7 +145,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Total</span>
             </div>
-            <input type="number" id="total"  class="form-control input-sm" readonly="readonly" />
+            <input type="number" id="total" name="laundry_total"  class="form-control input-sm" readonly="readonly" />
           </div>
           <div class="input-group" style="margin-bottom:5px"> 
             <div class="input-group-prepend">
@@ -177,7 +173,7 @@
               </div>
               <div class="col-12">
                 <label>Dibuat Tgl</label>
-                <input type="text" class="form-control form-control-sm" value="{{ \carbon\carbon::parse($data->laundry_created_at)->format('d-M-Y')}}" readonly>
+                <input type="text" class="form-control form-control-sm" value="{{ \carbon\carbon::parse($data->laundry_created_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @if (!empty($data->laundry_modified_at))
               <div class="col-12">
@@ -186,7 +182,7 @@
               </div>
               <div class="col-12">
                 <label>Diubah Tgl</label>
-                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_modified_at)->format('d-M-Y')}}" readonly>
+                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_modified_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->laundry_executed_at))
@@ -196,7 +192,7 @@
               </div> -->
               <div class="col-12">
                 <label>Diproses Tgl</label>
-                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_execute_at)->format('d-M-Y')}}" readonly>
+                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_execute_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->laundry_finished_at))
@@ -206,17 +202,27 @@
               </div>
               <div class="col-12">
                 <label>Diselesaikan Tgl</label>
-                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_finished_at)->format('d-M-Y')}}" readonly>
+                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_finished_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->laundry_delivered_at))
               <div class="col-12">
-                <label>Diselesaikan Oleh</label>
+                <label>Diantar Oleh</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_delivered_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diselesaikan Tgl</label>
-                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_delivered_at)->format('d-M-Y')}}" readonly>
+                <label>Diantar Tgl</label>
+                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_delivered_at)->format('d-M-Y H:m')}}" readonly>
+              </div>
+              @endif
+              @if(!empty($data->laundry_taken_at))
+              <div class="col-12">
+                <label>Diambil Oleh</label>
+                <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_taken_by}}" readonly>
+              </div>
+              <div class="col-12">
+                <label>Diambil Tgl</label>
+                <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_taken_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
             </div>
@@ -253,16 +259,69 @@
     </div>
     <div class="form-group required">
       <label for="nama">Sisa Bayar</label>
-      <input type="number" id="leftover" value="{{$data->diff}}" min="{{$data->diff}}" max="{{$data->diff}}" name="leftover" class="form-control text-right popup-number" required>
+      <input type="number" id="leftover" value="{{ isset($data->diff) ? $data->diff : '' }}" min="{{ isset($data->diff) ? $data->diff : '' }}" max="{{ isset($data->diff) ? $data->diff : '' }}" name="leftover" class="form-control text-right popup-number" required>
     </div>
   </div>
 </div>
 
-<div id="delivery"class="d-none">
-  <div class="form-horizontal">
-    <div class="form-group required">
-      <label for="nama">DP</label>
-      <select class="form-control input-sm" id="delivBy" name="laundry_delivered_by"></select>
+<div class="modal fade" id="modalDelivery" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ action('LaundryController@postDelivery', array('id' => old('id', $data->id))) }}"  method="POST" autocomplete="off">
+        <div class="modal-header">
+          <h6 class="modal-title" id="modalTitle">Delivery</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-d-none="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-horizontal">
+            <div class="form-group required">
+              <label>Karyawan Antar</label>
+              <div class="input-group input-group">
+                <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
+                <select class="form-control" id="delivSearch"  name="laundry_delivered_id" {{ empty($data->laundry_delivered_by) && !empty($data->laundry_finished_by) ? "required" : ""}}>
+                  @if($data->laundry_delivered_by)
+                    <option value="{{$data->laundry_delivered_id}}" selected="selected">{{$data->laundry_delivered_by}}</option>
+                  @endif
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Batal</button>
+          <button type="submit" style="min-width: 75px;" class="btn btn-success btn-sm font-bold">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalPickup" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ action('LaundryController@postPickup', array('id' => old('id', $data->id))) }}"  method="POST" autocomplete="off">
+        <div class="modal-header">
+          <h6 class="modal-title" id="modalTitle">Laundry Pick-up</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-d-none="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-horizontal">
+            <div class="form-group required">
+              <label>Diambil Oleh</label>
+              <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
+              <input type="text"  name="laundry_taken_by" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Batal</button>
+          <button type="submit" style="min-width: 75px;" class="btn btn-success btn-sm font-bold">Simpan</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -282,7 +341,8 @@ $(document).ready(function ()
     @endif
     
     $('[data-saveMode]').click(function (){
-        $('form').submit();
+      $('#mainForm').validate();
+      $('#mainForm').submit();
     });
 
     var $targetContainer = $('#detailLaundry');
@@ -314,54 +374,22 @@ $(document).ready(function ()
         id: item.id
       }
     });
+    $('#custSearch').on('select2:select', function (e) {
+      $('#custSearch').attr('data-has-changed', '1');
+    });
 
-
-    @if(empty($data->laundry_execute_at))
-      //DatePicker
-      $('[name=laundry_est_date]').daterangepicker({
-        singleDatePicker: true,
-        showDropdowns: true,
-        locale: {
-          format: 'DD-MM-YYYY'
-        }
-      });
-    @endif
+    //cari karyawan antar
+    inputSearch('#delivSearch', '{{ action("EmployeeController@searchEmployee") }}', '450px', function(item) {
+      return {
+        text: item.employee_name,
+        id: item.id
+      }
+    });
+    $('#tipe').on('change', function (e) {
+      $('#tipe').attr('data-has-changed', '1');
+    });
 
     $targetContainer.find('[type=number]').setupMask(0);
-
-      
-    
-    // inputSearch('#delivBy', '{{ action("EmployeeController@searchEmployee") }}', 'resolve', function(item) {
-    //   return {
-    //     text: item.customer_name,
-    //     id: item.id
-    //   }
-    // });
-
-    $('#antar').on('click', function(){
-      var modalFin = showPopupForm(
-      $(this),
-      { btnType: 'primary', keepOpen: true },
-      'Laundry Antar',
-      $('#delivery'),
-      "{{ action('LaundryController@postUbahStatus', array('id' => old('id', $data->id), 'mode' => 'delivery')) }}",
-      function ($form){
-          return {
-            laundry_delivered_by: $form.find('[name=laundry_delivered_by]').val()
-          };
-      },
-      //callback
-      function (data){
-        toastr.success(data.messages)
-        setTimeout(() => {
-          location.reload();
-        }, 1500);
-      },
-      function(tes){
-        
-      });
-      
-    });
 
     $('#selesai').on('click', function(){    
       var modalFin = showPopupForm(
@@ -382,14 +410,7 @@ $(document).ready(function ()
         setTimeout(() => {
           location.reload();
         }, 1500);
-      },
-      inputSearch('#delivBy', '{{ action("EmployeeController@searchEmployee") }}', 'resolve', function(item) {
-        return {
-          text: item.customer_name,
-          id: item.id
-        }
-      })
-    );
+      });
     });
 
     $('#proses').setupPopupForm(
@@ -420,14 +441,6 @@ $(document).ready(function ()
           toastr.success(data.messages)
       });
     });
-
-    $('#laundry_delivery').click(function(){
-      if($('#laundry_delivery').is(':checked')){
-        $('#deliv').text('Ya');
-      } else {
-        $('#deliv').text('Tidak');
-      }
-    })
   });
 
   function setupTotal()
@@ -472,21 +485,32 @@ $(document).ready(function ()
     inputSearch(
       $targetContainer.find('[name^=dtl][name$="[ldetail_lcategory_id]"]'), 
       '{{ action("LCategoryController@getDropDownList") }}',
-      '350px',function(item) {
+      '250px',function(item) {
       return {
         text: item.lcategory_name,
         id: item.id,
-        price: item.lcategory_price
+        price: item.lcategory_price,
+        days: item.lcategory_days
       }
     });
 
     $targetContainer.find('[name^=dtl][name$="[ldetail_lcategory_id]"]').on('select2:select', function (e) {
       var cB = e.params.data;
+      var endDate = setupDate(cB.days);
       $targetContainer.find('[name^=dtl][name$="[price]"]').val(cB.price);
+      $targetContainer.find('[name^=dtl][name$="[ldetail_end_date]"]').val(endDate);
+      $targetContainer.attr('data-has-changed', '1');
       
       setupPrice($targetContainer);
       //console.log(data);
     });
+  }
+
+  function setupDate(days)
+  {
+    var newDate = new Date();
+    var date =  newDate.setDate(newDate.getDate() + days);
+    return moment(date).format('DD-MM-YYYY');
   }
     
   function setupPrice($targetContainer)

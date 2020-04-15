@@ -17,7 +17,8 @@ class CreateLCategoriesTable extends Migration
             $table->bigIncrements('id');
             $table->string('lcategory_name');
             $table->string('lcategory_detail')->nullable();
-            $table->string('lcategory_days')->nullable();
+            $table->string('lcategory_type')->nullable();
+            $table->integer('lcategory_days')->nullable();
             $table->decimal('lcategory_price',16,0);
 
             $table->boolean('lcategory_active');

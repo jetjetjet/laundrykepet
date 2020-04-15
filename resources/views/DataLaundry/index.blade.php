@@ -61,12 +61,13 @@
         <div class="form-group">
           <label for="nama">Status</label>
           <div class="input-group input-group-sm">
-            <select name="status" class="form-control filter" >
+            <select id="status" name="status" class="form-control filter" >
               <option value="All">Semua</option>
               <option value="Draft"> Draft</option>
               <option value="Diproses">Diproses</option>
               <option value="Selesai">Selesai</option>
               <option value="Diantar">Diantar</option>
+              <option value="Diambil">Diambil</option>
             </select>
           </div>
         </div>
@@ -83,9 +84,6 @@
         <tr>
           <th>No. Invoice</th>
           <th>Pelanggan</th>
-          <!-- <th>Alamat</th> -->
-          <th>Kontak</th>
-          <th>Tgl. Selesai</th>
           <th>Delivery</th>
           <th>Lunas</th>
           <th>Status</th>
@@ -117,22 +115,6 @@
         },
         { 
           data: 'laundry_customer_name',
-          searchText: true
-        },
-        // { 
-        //   data: 'laundry_customer_address',
-        //   searchText: true
-        // },
-        { 
-            data: 'laundry_customer_phone',
-            searchText: true
-        },
-        { 
-          data: 'laundry_est_date',
-          width: '90px',
-          render: function (data, type, full, meta){
-            return moment(data).format('DD-MM-YYYY');
-          },
           searchText: true
         },
         { 
@@ -169,17 +151,30 @@
     var inputMapper = {
       "invoice": 1,
       "customer": 2,
-      "lunas": 6,
-      "status": 7
+      "lunas": 4,
+      "status": 5,
     };
+
+    var url_string = window.location.href; //window.location.href
+    var url = new URL(url_string);
+    var status = url.searchParams.get("status");
+
+    if(status){
+      $('#status').val(status);
+      $this = $('#status');
+      trigger($this);
+    }
   
     $(".filter").on("change", function(){
-      var $this = $(this);
+      trigger($(this));
+    });
+
+    function trigger($this){
       var val = $this.val();
       var key = $this.attr("name");
 
       dt.columns(inputMapper[key] - 1).search(val).draw();
-    });
+    }
   });
 </script>
 @endsection

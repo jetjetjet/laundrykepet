@@ -461,7 +461,8 @@ $.fn.setupPopupForm = function (btnType, content, postUrl, failCallbackFn, optio
     }
 
     if ($('form').find('[data-has-changed=1]:first').length){
-      toastr.success('Simpan perubahan terlebih dahulu.')
+      toastr.error('Simpan perubahan terlebih dahulu.')
+      return;
     }
 
     if (options && options.validateFormFirst && !$('form').valid()) return;

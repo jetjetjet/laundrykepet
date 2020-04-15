@@ -34,16 +34,23 @@
                 <label for="harga">Harga</label>
                 <input type="number" name="scategory_price" value="{{ $data->scategory_price }}" class="form-control" id="scategory_price" placeholder="Harga">
               </div>
-              @if(Perm::can(['kategoriSteam_simpan']))
-              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @if(Perm::can(['steamKategori_simpan']))
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
               @endif
-              @if($data->id && Perm::can(['kategoriSteam_hapus']))
-                <a href="#" class="btn btn-sm btn-danger" 
+              @if($data->id)
+                @if(Perm::can(['steamKategori_simpan']))
+                <a href="{{action('SCategoryController@getEdit')}}" class="btn btn-sm btn-success" >
+                  <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
+                </a>
+                @endif
+                @if(Perm::can(['steamKategori_hapus']))
+                <a href="#" class="btn btn-sm btn-danger float-right" 
                     delete-title="Konfirmasi Hapus Data"
                   delete-action="{{ action('SCategoryController@postDelete', array('id' => $data->id)) }}"
                   delete-message="Apakah anda yakin untuk menghapus data ini?"
                   delete-success-url="{{ action('SCategoryController@index') }}">
                   <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
+                @endif
               @endif
             </form>
           </div>
@@ -84,8 +91,8 @@
 
 @section('form-js')
 <script>
-    $(document).ready(function (){
-    
-    })
+  $(document).ready(function (){
+    $('[type=number]').setupMask(0);
+  })
 </script>
 @endsection

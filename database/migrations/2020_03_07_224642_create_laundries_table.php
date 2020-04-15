@@ -19,7 +19,7 @@ class CreateLaundriesTable extends Migration
             $table->string('laundry_invoice')->unique();
             $table->integer('laundry_customer_id');
             //$table->integer('laundry_est_days');
-            $table->dateTime('laundry_est_date');
+            //$table->dateTime('laundry_est_date');
             $table->decimal('laundry_paid',16,0)->nullable();
             $table->boolean('laundry_paidoff')->nullable();
             $table->boolean('laundry_delivery')->nullable();
@@ -35,6 +35,8 @@ class CreateLaundriesTable extends Migration
 
             $table->integer('laundry_delivered_by')->nullable();
             $table->dateTime('laundry_delivered_at')->nullable();
+            $table->string('laundry_taken_by')->nullable();
+            $table->dateTime('laundry_taken_at')->nullable();
 
             $table->boolean('laundry_active');
             $table->dateTime('laundry_created_at');

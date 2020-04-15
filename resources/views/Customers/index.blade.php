@@ -1,6 +1,6 @@
 @extends('Layouts.lists-body')
 
-<?php $title = 'Data Karyawan' ?>
+<?php $title = 'Data Pelanggan' ?>
 
 @section('breadNav')
   <li class="breadcrumb-item active"><a href="#">Pelanggan</a></li>
@@ -8,12 +8,14 @@
 
 @section('container')
 <div class="row">
+  @if(Perm::can(['pelanggan_tambah']))
   <nav class="navbar navbar-light bg-light">
     <div class="btn-group">
     <a href="{{ action('CustomersController@getEdit') }}" class="btn btn-sm btn-success" type="button">
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
+  @endif
   @if (!empty($error))  
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{ $error }}

@@ -7,13 +7,14 @@
 
 @section('container')
 <div class="row">
+  @if(Perm::can(['steamKategori_simpan']))
   <nav class="navbar navbar-light bg-light">
     <div class="btn-group">
       <a href="{{ action('SCategoryController@getEdit')}}" class="btn btn-sm btn-success" type="button">
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
-  
+  @endif
   <div class="col-12">
     <div class="card">
       <div class="card-body">

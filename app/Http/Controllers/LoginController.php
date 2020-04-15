@@ -47,6 +47,8 @@ class LoginController extends Controller
                 ->back()
 			    ->withInput($request->except('password'));
         };
+        $request->session()->put('username', Auth::user()->getUserName());
+        $request->session()->put('full_name', Auth::user()->getFullName());
         return redirect()->intended(); 
     }
 

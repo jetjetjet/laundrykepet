@@ -7,12 +7,14 @@
 
 @section('container')
 <div class="row">
+  @if(Perm::can(['peran_simpan']))
   <nav class="navbar navbar-light bg-light">
     <div class="btn-group">
       <a href="{{ action('RoleController@getEdit') }}" class="btn btn-sm btn-success" type="button">
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
+  @endif
   @if (!empty($error))  
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{ $error }}

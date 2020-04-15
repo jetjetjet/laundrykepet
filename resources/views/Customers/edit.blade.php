@@ -25,14 +25,23 @@
                 <label for="alamat">Alamat</label>
                 <textarea class="form-control" rows="2" placeholder="Alamat" name="customer_address">{{ $data->customer_address }}</textarea>
               </div>
-              <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @if(Perm::can(['pelanggan_simpan']))
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
+              @endif
               @if($data->id)
-                <a href="#" class="btn btn-sm btn-danger" 
+                @if(Perm::can(['pelanggan_simpan']))
+                  <a href="{{action('CustomersController@getEdit')}}" class="btn btn-sm btn-success" >
+                    <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
+                  </a>
+                @endif
+                @if(Perm::can(['pelanggan_tambah']))
+                  <a href="#" class="btn btn-sm btn-danger float-right" 
                     delete-title="Konfirmasi Hapus Data"
                   delete-action="{{ action('CustomersController@postDelete', array('id' => $data->id)) }}"
                   delete-message="Apakah anda yakin untuk menghapus data ini?"
                   delete-success-url="{{ action('CustomersController@index') }}">
                   <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
+                @endif
               @endif
             </form>
           </div>
