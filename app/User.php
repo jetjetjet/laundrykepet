@@ -41,6 +41,16 @@ class User extends Authenticatable
         return $this->attributes['id'];
     }
 
+    public function getUserName()
+    {       
+        return $this->attributes['user_name'];
+    }
+
+    public function getFullName()
+    {       
+        return $this->attributes['user_full_name'];
+    }
+
     public function permissions()
     {       
         return $this->attributes['permissions'];

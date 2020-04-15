@@ -11,38 +11,38 @@
     <div class="col-md-12">
       <div class="card-body" style="padding: 0.80rem;">
         <div class="btn-group">
-          @if(empty($data->laundry_executed_at))
+          @if(empty($data->laundry_executed_at) && Perm::can(['laundry_simpan']))
             <button class="btn btn-sm btn-success" id="simpan" type="button" data-saveMode="" disabled>
             <span class="fa fa-save fa-fw"></span>&nbsp;Simpan</button>
             &nbsp;
           @endif
-          @if(!empty($data->id))
+          @if(!empty($data->id) && Perm::can(['laundry_cetak']))
             <a href="{{action('LaundryController@generateReceipt') . '/' . $data->id }}" target="_blank" class="btn btn-sm btn-default" id="print" type="button" data-saveMode="" disabled>
             <span class="fa fa-print fa-fw"></span>&nbsp;Cetak</a>
             &nbsp;
           @endif
-          @if(!empty($data->id) && empty($data->laundry_executed_at))
+          @if(!empty($data->id) && empty($data->laundry_executed_at) && Perm::can(['laundry_ubahStatus']))
             <button id="proses" class="btn btn-sm btn-primary" type="button">
               <span class="fa fa-check fa-fw"></span>&nbsp;Proses</button>
             &nbsp;
           @endif
-          @if(!empty($data->laundry_executed_at) && empty($data->laundry_finished_at))
+          @if(!empty($data->laundry_executed_at) && empty($data->laundry_finished_at) && Perm::can(['laundry_ubahStatus']))
             <button id="selesai" class="btn btn-sm btn-success" type="button">
             <span class="fa fa-check fa-fw"></span>&nbsp;Selesai</button>
             &nbsp;
           @endif
-          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_delivered_at)) && $data->laundry_delivery)
+          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_delivered_at)) && $data->laundry_delivery && Perm::can(['laundry_antar']))
             <button class="btn btn-sm btn-warning" type="button" data-toggle="modal" data-target="#modalDelivery">
             <span class="fa fa-check fa-fw"></span>&nbsp;Antar</button>
             &nbsp;
           @endif
-          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_taken_at)) && !$data->laundry_delivery)
+          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_taken_at)) && !$data->laundry_delivery && Perm::can(['laundry_antar']))
             <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#modalPickup">
             <span class="fa fa-check fa-fw"></span>&nbsp;Pick-up</button>
             &nbsp;
           @endif
         </div>
-        @if(!empty($data->id) && empty($data->laundry_executed_at))
+        @if(!empty($data->id) && empty($data->laundry_executed_at) && Perm::can(['laundry_hapus']))
           <div class="float-right">
             <a href="#" class="btn btn-sm btn-danger" 
               delete-title="Konfirmasi Hapus Data Laundry"
@@ -104,7 +104,7 @@
         </div>
         <!-- Button Detail -->
         <div class="col-md-12" style="margin-bottom:8px;">
-        @if(Perm::can(['laundry_tambah']) && empty($data->laundry_executed_at))
+        @if(Perm::can(['laundry_simpan']) && empty($data->laundry_executed_at))
           <div class="float-right">
             <button type="button" class="btn btn-sm btn-success add-row" disabled>
               <span class="fa fa-plus fa-fw"></span>&nbsp; Tambah
