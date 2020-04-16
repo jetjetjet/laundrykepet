@@ -14,6 +14,14 @@
       <p>Beranda</p>
     </a>
   </li>
+  @if(Perm::can(['labsen_lihat']))
+    <li class="nav-item">
+      <a href="{{ action("LAbsenController@index") }}" class="nav-link {{ (request()->is('Absen*')) ? 'active' : '' }}">
+        <i class="nav-icon fa fa-users"></i>
+        <p>{{ trans('fields.absen') }}</p>
+      </a>
+    </li>
+  @endif
   @if ($master)
   <li class="nav-item has-treeview menu-{{$masterUrl ? 'open' : 'close' }}">
     <a href="#" class="nav-link {{ $masterUrl ? 'active' : '' }}">
@@ -122,13 +130,13 @@
       </a>
     </li>
   @endif
-  @if(Perm::can(['labsen_lihat']))
-    <li class="nav-item">
-      <a href="{{ action("LAbsenController@index") }}" class="nav-link {{ (request()->is('Absen*')) ? 'active' : '' }}">
-        <i class="nav-icon fa fa-users"></i>
-        <p>{{ trans('fields.absen') }}</p>
-      </a>
-    </li>
+  @if(Perm::can(['pengeluaranLaundry_simpan']))
+  <li class="nav-item">
+    <a href="{{ action("LexpensesController@index") }}" class="nav-link">
+      <i class="nav-icon fa fa-shopping-cart"></i>
+      <p>Pengeluaran Laundry</p>
+    </a>
+  </li>
   @endif
   <li class="nav-item">
     <a href="{{ action("LoginController@getLogoff") }}" class="nav-link">
