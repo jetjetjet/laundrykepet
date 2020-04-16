@@ -1,6 +1,7 @@
 <?php
 
 return[
+    'absen' => 'Absen',
     'bayar' => 'Bayar',
     'category' => 'Kategory',
     'createdAt' => 'Dibuat Pada',

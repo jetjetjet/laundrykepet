@@ -10,4 +10,10 @@ class AppSetting
   {
     return Setting::where('setting_key', 'Nama Toko')->select('setting_value')->first();
   }
+
+  public static function getLogo()
+  {
+    $filename = Setting::where('setting_category', 'Logo')->select('setting_value')->first();
+    return $filename['setting_value'];
+  }
 }

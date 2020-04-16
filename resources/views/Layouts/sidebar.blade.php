@@ -122,6 +122,14 @@
       </a>
     </li>
   @endif
+  @if(Perm::can(['labsen_lihat']))
+    <li class="nav-item">
+      <a href="{{ action("LAbsenController@index") }}" class="nav-link {{ (request()->is('Absen*')) ? 'active' : '' }}">
+        <i class="nav-icon fa fa-users"></i>
+        <p>{{ trans('fields.absen') }}</p>
+      </a>
+    </li>
+  @endif
   <li class="nav-item">
     <a href="{{ action("LoginController@getLogoff") }}" class="nav-link">
       <i class="nav-icon fa fa-sign-out-alt"></i>

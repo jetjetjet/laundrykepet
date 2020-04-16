@@ -43,7 +43,7 @@
     let dt = $('#grid').DataTable({
       ajax: '{{ action("EmployeeController@getEmployeeLists") }}',
       "processing": true,
-      "serverSide": true,
+      "serverSide": false,
       columns: [
         { 
           data: 'employee_name',

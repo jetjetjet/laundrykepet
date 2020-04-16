@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Http\Model\Setting;
+use App\Http\Model\Employee;
+
 
 class SettingSeed extends Seeder
 {
@@ -12,6 +14,10 @@ class SettingSeed extends Seeder
      */
     public function run()
     {
+      Employee::truncate();
+      Setting::truncate();
+
+      factory(Employee::class, 20)->create();
       Setting::create([
         'setting_category' => 'Setting',
         'setting_key' => 'Nama Toko',
@@ -69,7 +75,7 @@ class SettingSeed extends Seeder
       Setting::create([
         'setting_category' => 'Logo',
         'setting_key' => 'Logo Aplikasi',
-        'setting_value' => 'Dir',
+        'setting_value' => null,
         'setting_active' => '1',
         'setting_created_at' => now()->toDateTimeString(),
         'setting_created_by' => '1'

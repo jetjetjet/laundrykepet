@@ -35,6 +35,12 @@
 
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="{{ url('/') }}" class="brand-link">
+    @if(Setting::getLogo())
+    <img src="{{ asset('storage/images/'.Setting::getLogo()) }}"
+      alt="AdminLTE Logo"
+      class="brand-image img-circle elevation-3"
+      style="opacity: .8">
+    @endif
       <span class="brand-text font-weight-light">{{Setting::getAppName()->setting_value}}</span>
     </a>
 

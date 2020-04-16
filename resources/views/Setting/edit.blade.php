@@ -12,7 +12,7 @@
       <div class="card">
         <div class="card-body pd-lg-25">
           <div class="col-lg-12 col-xl-12">
-            <form action="{{ action("SettingController@postEdit") }}" method="POST" autocomplete="off">
+            <form action="{{ action("SettingController@postEdit") }}" method="POST" autocomplete="off" enctype="multipart/form-data">
               <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <div class="form-group">
@@ -25,7 +25,16 @@
                 </div>
               <div class="form-group">
               <label for="nama">Value</label>
-                <input type="text" name="setting_value" value="{{ $data->setting_value }}" class="form-control" placeholder="Nama value">
+                @if($data->setting_category == "Logo")
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="image" name="image" required>
+                    <label class="custom-file-label" for="image">Choose file</label>
+                  </div>
+                </div>
+                @else
+                  <input type="text" name="setting_value" value="{{ $data->setting_value }}" class="form-control" placeholder="Nama value">
+                @endif
               </div>
               @if(Perm::can(['setting_simpan']))
                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
@@ -68,9 +77,10 @@
 
 
 @section('form-js')
+<script src="{{ url('/') }}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script>
     $(document).ready(function (){
-    
+      bsCustomFileInput.init();
     })
 </script>
 @endsection

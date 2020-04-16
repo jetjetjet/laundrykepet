@@ -17,7 +17,7 @@ class CreateSettingsTable extends Migration
             $table->bigIncrements('id');
             $table->string('setting_category',25);
             $table->string('setting_key',200);
-            $table->string('setting_value',200);
+            $table->string('setting_value',200)->nullable();
             $table->boolean('setting_active',);
             $table->dateTime('setting_created_at');
             $table->integer('setting_created_by');

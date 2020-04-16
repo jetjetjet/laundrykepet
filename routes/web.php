@@ -24,7 +24,13 @@ Route::post('login', 'LoginController@postLogin');
 Route::group(array('middleware' => 'auth'), function ()
 {
     Route::get('/', 'HomeController@index');
-    Route::get('/Dashboar/Data', 'HomeController@getDataDash');
+    Route::get('/Dashboar/Data', 'HomeController@getDataDash');    
+
+    Route::get('Absen/', 'LAbsenController@index')->middleware('can:labsen_list');
+    Route::get('Absen/List', 'LAbsenController@getList')->middleware('can:labsen_list');
+    Route::get('Absen/Edit/{id?}', 'LAbsenController@getEdit')->middleware('can:labsen_lihat');
+    Route::post('Absen/Save/{id?}', 'LAbsenController@postEdit')->middleware('can:labsen_simpan');
+    Route::post('Absen/Delete/{id?}', 'LAbsenController@postDelete')->middleware('can:labsen_hapus');
     
     Route::get('Category/', 'CategoryController@index')->middleware('can:laundryKategori_list');
     Route::get('Category/Lists', 'CategoryController@getCategoryLists')->middleware('can:laundryKategori_list');
@@ -98,12 +104,5 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::get('Expense/Edit/{id?}', 'ExpenseController@getEdit')->middleware('can:pengeluaran_lihat');
     Route::post('Expense/Save/{id?}', 'ExpenseController@postEdit')->middleware('can:pengeluaran_simpan');
     Route::post('Expense/Delete/{id?}', 'ExpenseController@postDelete')->middleware('can:pengeluaran_hapus');
-
-    Route::get('Users/', 'UserController@index');
-    Route::get('Users/Lists', 'UserController@getUserLists');
-    Route::get('Users/Edit/{id?}', 'UserController@getEdit');
-    Route::post('Users/Save/{id?}', 'UserController@postEdit');
-    Route::post('Users/Delete/{id?}', 'UserController@postDelete');
-    Route::post('Users/ChangePassword/{id?}', 'UserController@postChangePassword');
 
 });

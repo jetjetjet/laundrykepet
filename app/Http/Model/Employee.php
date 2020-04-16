@@ -25,4 +25,10 @@ class Employee extends Model
 
         return $model;
     }
+
+    public function scopeLaundryEmployee($query)
+    {
+        return $query->where('employee_active', '1')
+            ->where('employee_type', 'Laundry');
+    }
 }

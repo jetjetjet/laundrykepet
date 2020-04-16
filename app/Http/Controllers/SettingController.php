@@ -6,6 +6,9 @@ use App\Http\Model\Setting;
 use Auth;
 use Illuminate\Http\Request;
 use Validator;
+use File;
+use Image;
+use Carbon\Carbon;
  
 class SettingController extends Controller
 {
@@ -94,6 +97,17 @@ class SettingController extends Controller
         ]);
         $request->session()->flash('successMessages', 'Data ' . $setting->setting_key . ' berhasil ditambah.');
       } else {
+        if($request->file('image')){
+          $path = storage_path('app/public/images');
+          if (!File::isDirectory($path)) {
+            File::makeDirectory($path);
+          }
+
+          $file = $request->file('image');
+          $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+          $file->move($path, $fileName);
+          $request->setting_value =  $fileName;
+        }
         $setting = Setting::where('setting_active', '1')->where('id', $request->id)->firstOrFail();
         $setting->update([
           'setting_category' => $request->setting_category,

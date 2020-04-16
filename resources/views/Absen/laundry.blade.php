@@ -1,17 +1,17 @@
 @extends('Layouts.lists-body')
 
-<?php $title = 'Data Pelanggan' ?>
+<?php $title = 'Absen Laundry' ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">Pelanggan</a></li>
+  <li class="breadcrumb-item active"><a href="#">Absen Laundry</a></li>
 @endsection
 
 @section('container')
 <div class="row">
-  @if(Perm::can(['pelanggan_tambah']))
+  @if(Perm::can(['labsen_tambah']))
   <nav class="navbar navbar-light bg-light">
     <div class="btn-group">
-    <a href="{{ action('CustomersController@getEdit') }}" class="btn btn-sm btn-success" type="button">
+    <a href="{{ action('LAbsenController@getEdit') }}" class="btn btn-sm btn-success" type="button">
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
@@ -33,15 +33,12 @@
       <div class="card-body">
         <table id="grid" class="table table-bordered table-hover">
           <thead>
-          <tr>
-            <th>Nama Pelanggan</th>
-            <th>Alamat</th>
-            <th>Kontak</th>
-            <th>Tgl Dibuat</th>
-            <th>Dibuat Oleh</th>
-            <th>Tgl Diubah</th>
-            <th>Diubah Oleh</th>
-          </tr>
+            <tr>
+              <th>Tgl Absen</th>
+              <th>Dibuat Oleh</th>
+              <th>Tgl Diubah</th>
+              <th>Diubah Oleh</th>
+            </tr>
           </thead>
         </table>
       </div>
@@ -54,41 +51,32 @@
 <script>
   $(document).ready(function (){
     let dt = $('#grid').DataTable({
-      ajax: '{{ action("CustomersController@getCustomerLists") }}',
+      ajax: '{{ action("LAbsenController@getList") }}',
       "processing": true,
       "serverSide": true,
       columns: [
         { 
-          data: 'customer_name',
+          data: 'labsen_created_at',
           render: function (data, type, full, meta){
-            let link =  "{{ action('CustomersController@getEdit') . '/' }}" + full.id ;
-            return '<a href="' + link + '">' + full.customer_name + '</a>';
+            let link =  "{{ action('LAbsenController@getEdit') . '/' }}" + full.id ;
+            return '<a href="' + link + '">' + moment(full.labsen_created_at).format('DD-MM-YYYY')  + '</a>';
           },
           searchText: true
         },
         { 
-            data: 'customer_address',
-            searchText: true
+          data: 'labsen_created_by',
+          searchText: true
         },
         { 
-            data: 'customer_phone',
-            searchText: true
+          data: 'labsen_modified_at',
+          searchText: true
         },
         { 
-            data: 'customer_created_at',
-            searchText: true
-        },
-        { 
-            data: 'customer_cr',
-            searchText: true
-        },
-        { 
-            data: 'customer_modified_at',
-            searchText: true
-        },
-        { 
-            data: 'customer_mod',
-            searchText: true
+          data: 'labsen_modified_by',
+          searchText: true,
+          render: function (data, type, full, meta){
+            return data != null ? moment(data).format('DD-MM-YYYY') : '';
+          },
         },
       ]
     });
