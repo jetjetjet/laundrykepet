@@ -128,6 +128,12 @@
     </a>
   </li>
   <li class="nav-item">
+    <a href="{{ action("LexpensesController@index") }}" class="nav-link">
+      <i class="nav-icon fas fa-th"></i>
+      <p>Pengeluaran Laundry</p>
+    </a>
+  </li>
+  <li class="nav-item">
     <a href="{{ action("LoginController@getLogoff") }}" class="nav-link">
       <i class="nav-icon fas fa-th"></i>
       <p>Keluar</p>

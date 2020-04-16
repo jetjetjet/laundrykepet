@@ -1,15 +1,15 @@
 @extends('Layouts.lists-body')
 
-<?php $title = 'Expense' ?>
+<?php $title = 'Pengeluaran Laundry' ?>
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="{{ url('/') }}">Expense</a></li>
+  <li class="breadcrumb-item active"><a href="{{ url('/') }}">Pengeluaran Laundry</a></li>
 @endsection
 
 @section('container')
 <div class="row">
   <nav class="navbar navbar-light bg-light">
     <div class="btn-group">
-      <a href="{{ action('ExpenseController@getEdit')}}" class="btn btn-sm btn-success" type="button">
+      <a href="{{ action('LexpensesController@getEdit')}}" class="btn btn-sm btn-success" type="button">
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
@@ -21,7 +21,6 @@
           <thead>
           <tr>
             <th>Name</th>
-            
             <th>Price</th>
             <th>Tgl Dibuat</th>
             <th>Dibuat Oleh</th>
@@ -40,36 +39,36 @@
 <script>
   $(document).ready(function (){
     let dt = $('#grid').DataTable({
-      ajax : '{{ action("ExpenseController@getGrid") }}',
+      ajax : '{{ action("LexpensesController@getGrid") }}',
       "processing": true,
       "serverSide": true,
       columns: [
         { 
-          data: 'expense_name',
+          data: 'lexpenses_name',
           render: function (data, type, full, meta){
-            let link =  "{{ action('ExpenseController@getEdit') . '/' }}" + full.id ;
-            return '<a href="' + link + '">' + full.expense_name + '</a>';
+            let link =  "{{ action('LexpensesController@getEdit') . '/' }}" + full.id ;
+            return '<a href="' + link + '">' + full.lexpenses_name + '</a>';
           },
           searchText: true
         },
         { 
-            data: 'expense_price',
+            data: 'lexpenses_price',
             searchText: true
         },
         { 
-            data: 'expense_created_at',
+            data: 'lexpenses_created_at',
             searchText: true
         },
         { 
-            data: 'expense_created_by',
+            data: 'lexpenses_created_by',
             searchText: true
         },
         { 
-            data: 'expense_modified_at',
+            data: 'lexpenses_modified_at',
             searchText: true
         },
         { 
-            data: 'expense_modified_by',
+            data: 'lexpenses_modified_by',
             searchText: true
         },
       ]
