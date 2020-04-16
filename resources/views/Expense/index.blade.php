@@ -7,26 +7,26 @@
 
 @section('container')
 <div class="row">
+  @if(Perm::can(['pengeluaran_simpan']))
   <nav class="navbar navbar-light bg-light">
     <div class="btn-group">
       <a href="{{ action('ExpenseController@getEdit')}}" class="btn btn-sm btn-success" type="button">
       <span class="fa fa-plus fa-fw"></span>&nbsp;{{ trans('fields.new') }}</a>
     </div>
   </nav>
-  
+  @endif
   <div class="col-12">
     <div class="card">
       <div class="card-body">
         <table id="grid" class="table table-bordered table-hover">
           <thead>
           <tr>
-            <th>Name</th>
-            
-            <th>Price</th>
-            <th>Tgl Dibuat</th>
-            <th>Dibuat Oleh</th>
-            <th>Tgl Diubah</th>
-            <th>Diubah Oleh</th>
+            <th>{{ trans('fields.name') }}</th>
+            <th>{{ trans('fields.price') }}</th>
+            <th>{{ trans('fields.createdAt') }}</th>
+            <th>{{ trans('fields.createdBy') }}</th>
+            <th>{{ trans('fields.modifiedAt') }}</th>
+            <th>{{ trans('fields.modifiedBy') }}</th>
           </tr>
           </thead>
         </table>

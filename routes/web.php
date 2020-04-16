@@ -84,19 +84,20 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Users/Delete/{id?}', 'UserController@postDelete')->middleware('can:user_hapus');
     Route::post('Users/ChangePassword/{id?}', 'UserController@postChangePassword')->middleware('can:user_simpan');
 
-    Route::get('Laporan/Laundry', 'ReportController@indexLaundry');
+    Route::get('Laporan/Laundry', 'ReportController@getLaundryReport')->middleware('can:laporan_lihat');
+    //Route::get('Laporan/Laundry/List', 'ReportController@getLaundryReport');
 
-    Route::get('Setting/','SettingController@index');
-    Route::get('Setting/List','SettingController@getGrid');
-    Route::get('Setting/Edit/{id?}', 'SettingController@getEdit');
-    Route::post('Setting/Save/{id?}', 'SettingController@postEdit');
-    Route::post('Setting/Delete/{id?}', 'SettingController@postDelete');
+    Route::get('Setting/','SettingController@index')->middleware('can:setting_list');
+    Route::get('Setting/List','SettingController@getGrid')->middleware('can:setting_list');
+    Route::get('Setting/Edit/{id?}', 'SettingController@getEdit')->middleware('can:setting_lihat');
+    Route::post('Setting/Save/{id?}', 'SettingController@postEdit')->middleware('can:setting_simpan');
+    Route::post('Setting/Delete/{id?}', 'SettingController@postDelete')->middleware('can:setting_hapus');
 
-    Route::get('Expense/','ExpenseController@index');
-    Route::get('Expense/List','ExpenseController@getGrid');
-    Route::get('Expense/Edit/{id?}', 'ExpenseController@getEdit');
-    Route::post('Expense/Save/{id?}', 'ExpenseController@postEdit');
-    Route::post('Expense/Delete/{id?}', 'ExpenseController@postDelete');
+    Route::get('Expense/','ExpenseController@index')->middleware('can:pengeluaran_list');
+    Route::get('Expense/List','ExpenseController@getGrid')->middleware('can:pengeluaran_list');
+    Route::get('Expense/Edit/{id?}', 'ExpenseController@getEdit')->middleware('can:pengeluaran_lihat');
+    Route::post('Expense/Save/{id?}', 'ExpenseController@postEdit')->middleware('can:pengeluaran_simpan');
+    Route::post('Expense/Delete/{id?}', 'ExpenseController@postDelete')->middleware('can:pengeluaran_hapus');
 
     Route::get('Lexpenses/','LexpensesController@index');
     Route::get('Lexpenses/List','LexpensesController@getGrid');
