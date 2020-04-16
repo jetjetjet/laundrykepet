@@ -17,11 +17,11 @@
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <div class="form-group">
                 <label for="nama">Kategori</label>
-                <input type="text" name="setting_category" value="{{ $data->setting_category }}" class="form-control" placeholder="Nama Kategori">
+                <input type="text" name="setting_category" value="{{ $data->setting_category }}" class="form-control" placeholder="Nama Kategori" readonly>
                 </div>
               <div class="form-group">
               <label for="nama">Key</label>
-                <input type="text" name="setting_key" value="{{ $data->setting_key }}" class="form-control" placeholder="Nama key">
+                <input type="text" name="setting_key" value="{{ $data->setting_key }}" class="form-control" placeholder="Nama key" readonly>
                 </div>
               <div class="form-group">
               <label for="nama">Value</label>
@@ -29,21 +29,6 @@
               </div>
               @if(Perm::can(['setting_simpan']))
                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
-              @endif
-              @if($data->id)
-                @if(Perm::can(['setting_simpan']))
-                  <a href="{{action('SettingController@getEdit')}}" class="btn btn-sm btn-success" >
-                    <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
-                  </a>
-                @endif
-                @if(Perm::can(['setting_hapus']))
-                <a href="#" class="btn btn-sm btn-danger float-right" 
-                    delete-title="Konfirmasi Hapus Data"
-                  delete-action="{{ action('SettingController@postDelete', array('id' => $data->id)) }}"
-                  delete-message="Apakah anda yakin untuk menghapus data ini?"
-                  delete-success-url="{{ action('SettingController@index') }}">
-                  <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
-                @endif
               @endif
             </form>
           </div>

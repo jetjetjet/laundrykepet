@@ -21,7 +21,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="{{ url('/') }}/index2.html"><b>Aplikasi </b> LOndry</a>
+    <a href="{{ url('/') }}"><b>{{Setting::getAppName()->setting_value}}</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -30,10 +30,10 @@
       @if (Session::get('errorMessages'))
         <div class="alert alert-solid alert-danger" role="alert">{{ Session::get('errorMessages') }}</div>
       @endif
-      <form name="form" action="{{ action("LoginController@postLogin") }}" method="POST" novalidate autocomplete="off">
+      <form name="form" action="{{ action("LoginController@postLogin") }}" method="POST" autocomplete="off" >
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
         <div class="input-group mb-3">
-        <input type="text" class="form-control" name="username" value="{{ old('username') }}" placeholder="Username">
+        <input type="text" class="form-control" name="username" value="{{ old('username') }}" placeholder="Username" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password">
+          <input type="password" name="password" class="form-control" placeholder="Password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

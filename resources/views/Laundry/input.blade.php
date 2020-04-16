@@ -17,7 +17,7 @@
             &nbsp;
           @endif
           @if(!empty($data->id) && Perm::can(['laundry_cetak']))
-            <a href="{{action('LaundryController@generateReceipt') . '/' . $data->id }}" target="_blank" class="btn btn-sm btn-default" id="print" type="button" data-saveMode="" disabled>
+            <a href="{{action('LaundryController@generateReceipt') . '/' . $data->id }}" target="_blank" class="btn btn-sm btn-default" id="print">
             <span class="fa fa-print fa-fw"></span>&nbsp;Cetak</a>
             &nbsp;
           @endif

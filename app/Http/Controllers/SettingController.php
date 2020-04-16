@@ -113,26 +113,26 @@ class SettingController extends Controller
  
   public function postDelete(Request $request, $id = null)
   {
-    $rules = array('success'=> false,'errorMessages' =>array(), 'debugMassages' =>array());
-    $setting = Setting::where('setting_active', '1')->where('id', $id)->first();
+  //   $rules = array('success'=> false,'errorMessages' =>array(), 'debugMassages' =>array());
+  //   $setting = Setting::where('setting_active', '1')->where('id', $id)->first();
  
-    if($setting == null){
-      $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
-      return redirect(action('SettingController@index'));
-    }
+  //   if($setting == null){
+  //     $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
+  //     return redirect(action('SettingController@index'));
+  //   }
  
-    try{
-        $setting->update([
-          'setting_active' => '0',
-          'setting_modified_by' => Auth::user()->getAuthIdentifier(),
-          'setting_modified_at' => now()->toDateTimeString()
-        ]);
-        $result['success'] = true;
-        $result['successMessages'] = 'Data ' . $setting->Setting_key . ' berhasil dihapus.';
-        return response()->json($result);
-      } catch (\Exception $e) {
-        array_push($result['errorMessages'], $e->getMessage());
-        return response()->json($result);
-      }
-  }
+  //   try{
+  //       $setting->update([
+  //         'setting_active' => '0',
+  //         'setting_modified_by' => Auth::user()->getAuthIdentifier(),
+  //         'setting_modified_at' => now()->toDateTimeString()
+  //       ]);
+  //       $result['success'] = true;
+  //       $result['successMessages'] = 'Data ' . $setting->Setting_key . ' berhasil dihapus.';
+  //       return response()->json($result);
+  //     } catch (\Exception $e) {
+  //       array_push($result['errorMessages'], $e->getMessage());
+  //       return response()->json($result);
+  //     }
+   }
 }
