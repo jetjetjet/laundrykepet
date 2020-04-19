@@ -48,6 +48,9 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::get('DataLaundry/', 'DataLaundryController@index')->middleware('can:laundry_list');
     Route::get('DataLaundry/Lists', 'DataLaundryController@getLists')->middleware('can:laundry_list');
 
+    Route::get('DataSteam/', 'DataSteamController@index');
+    Route::get('DataSteam/Lists', 'DataSteamController@getLists');
+
     Route::get('Employee/', 'EmployeeController@index')->middleware('can:karyawan_list');
     Route::get('Employee/Lists', 'EmployeeController@getEmployeeLists')->middleware('can:karyawan_list');
     Route::get('Employee/Edit/{id?}', 'EmployeeController@getEdit')->middleware('can:karyawan_lihat');
@@ -83,7 +86,15 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Role/Save', 'RoleController@postEdit')->middleware('can:peran_simpan');
     Route::post('Role/Delete/{id?}', 'RoleController@postDelete')->middleware('can:peran_hapus');
 
+    Route::get('Steam/Input/{id?}', 'SteamController@input');
+    Route::get('Steam/Print/{id?}', 'SteamController@generateReceipt');
+    Route::post('Steam/Save/{id?}', 'SteamController@postEdit');
+    Route::post('Steam/ChangeStatus/{id?}/{mode?}', 'SteamController@postUbahStatus');
+    Route::post('Steam/Pickup/{id?}', 'SteamController@postPickup');
+    Route::post('Steam/Delete/{id?}', 'SteamController@postDelete');
+    
     Route::get('SCategory/','SCategoryController@index')->middleware('can:steamKategori_list');
+    Route::get('SCategory/DropdownList', 'SCategoryController@getDropDownList');
     Route::get('SCategory/List','SCategoryController@getGrid')->middleware('can:steamKategori_list');
     Route::get('SCategory/Edit/{id?}', 'SCategoryController@getEdit')->middleware('can:steamKategori_lihat');
     Route::post('Scategory/Save/{id?}', 'SCategoryController@postEdit')->middleware('can:steamKategori_simpan');

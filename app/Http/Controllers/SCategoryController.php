@@ -14,6 +14,19 @@ class SCategoryController extends Controller
     return view('SCategory.index');
   }
 
+  public function getDropDownList(Request $request)
+  {
+    if ($request->has('q')) {
+      $cari = $request->q;
+      $data = SCategory::
+        whereRaw('UPPER(scategory_name) LIKE UPPER(\'%'.$cari.'%\')')
+        ->where('scategory_active', '1')
+        ->select('id', 'scategory_name', 'scategory_price')
+        ->get();
+      return response()->json($data);
+    }
+  }
+
   public function getGrid(Request $request)
   {
       $data=SCategory::join('users as cr','scategory_created_by','cr.id')
@@ -94,7 +107,7 @@ class SCategoryController extends Controller
                 'scategory_created_at' => now()->toDateTimeString()
             ]);
 
-            $request->session()->flash('successMessages', 'Data ' . $category->lcategory_name . ' berhasil ditambah.');
+            $request->session()->flash('successMessages', 'Data ' . $category->scategory_name . ' berhasil ditambah.');
 
 
         }

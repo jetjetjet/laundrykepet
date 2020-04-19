@@ -5,6 +5,9 @@
     || request()->is('Customers*') || request()->is('LCategory*'));
   $laundry = (Perm::can(['laundry_simpan'])|| Perm::can(['laundry_list']));
   $laundryUrl = (request()->is('DataLaundry*') || request()->is('Laundry*'));
+  $steam = (Perm::can(['steam_simpan'])|| Perm::can(['steam_list']));
+  $steamUrl = (request()->is('DataSteam*') || request()->is('Steam*'));
+
 ?>
 
 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -105,6 +108,32 @@
       </ul>
     </li>
   @endif
+
+  @if($steam)
+    <li class="nav-item has-treeview menu-open">
+      <a href="#" class="nav-link {{ $steamUrl ? 'active' : '' }}">
+        <i class="nav-icon fas fa-wrench"></i>
+        <p>Steam<i class="right fas fa-angle-left"></i></p>
+      </a>
+      <ul class="nav nav-treeview">
+        @if(Perm::can(['steam_simpan']))
+        <li class="nav-item">
+          <a href="{{ action("SteamController@input") }}" class="nav-link {{ (request()->is('Steam*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
+            <p>Input Steam</p>
+          </a>
+        </li>
+        @endif
+        @if(Perm::can(['steam_list']))
+        <li class="nav-item">
+          <a href="{{ action("DataSteamController@index") }}" class="nav-link {{ (request()->is('DataSteam*')) ? 'active' : '' }}"><i class="far fa-circle nav-icon"></i>
+            <p>Data Steam</p>
+          </a>
+        </li>
+        @endif
+      </ul>
+    </li>
+  @endif
+
   @if(Perm::can(['laporan_lihat']))
     <li class="nav-item has-treeview menu-{{(request()->is('Laporan*')) ? 'open' : 'close' }}">
       <a href="#" class="nav-link {{ (request()->is('Laporan*')) ? 'active' : '' }}">
