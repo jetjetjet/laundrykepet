@@ -38,13 +38,13 @@ class CreateRolesTable extends Migration
             $table->integer('user_role_modified_by')->nullable();
         });
 
-        Schema::table('user_roles', function (Blueprint $table) {
-            $table->integer('user_role_user_id')->unsigned()->change();
-            $table->foreign('user_role_user_id')->references('id')->on('users');
+        // Schema::table('user_roles', function (Blueprint $table) {
+        //     $table->integer('user_role_user_id')->unsigned()->change();
+        //     $table->foreign('user_role_user_id')->references('id')->on('users');
 
-            $table->integer('user_role_role_id')->unsigned()->change();
-            $table->foreign('user_role_role_id')->references('id')->on('roles');
-        });
+        //     $table->integer('user_role_role_id')->unsigned()->change();
+        //     $table->foreign('user_role_role_id')->references('id')->on('roles');
+        // });
     }
 
     /**

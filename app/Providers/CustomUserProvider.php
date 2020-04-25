@@ -61,12 +61,16 @@ class CustomUserProvider implements UserProvider{
         ->where('user_role_active', '1')
         ->where('role_active', '1')
         ->where('users.id', $id) //Auth::user()->getAuthIdentifier())
-        ->select(DB::raw('distinct (regexp_split_to_table(string_agg(role_permissions, \',\'), \',\')::varchar) as perm'))
+        ->select('role_permissions')
         ->get();
         $perm = array();
-        foreach($permissions as $permission){
-            array_push($perm, $permission->perm);
+        foreach($permissions as $p){
+            $ar = explode(',', $p->role_permissions);
+            foreach($ar as $r){
+                array_push($perm, $r);
+            }
         }
+        $perm = array_unique($perm);
 
         return $perm;
     }
