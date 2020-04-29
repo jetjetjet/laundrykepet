@@ -89,7 +89,7 @@ class EmployeeController extends Controller
     if ($validator->fails()){
       return redirect()->back()->withErrors($validator)->withInput($inputs);
     }
-      
+    
     try{
       $emp = null;
       if(!$request->id) {
@@ -98,6 +98,7 @@ class EmployeeController extends Controller
           'employee_contact' => $request->employee_contact,
           'employee_address' => $request->employee_address,
           'employee_sallary' => $request->employee_sallary,
+          'employee_join_date' => $request->employee_join_date,
           'employee_type' => $request->employee_type,
           'employee_active' => '1',
           'employee_created_by' => Auth::user()->getAuthIdentifier(),
@@ -114,6 +115,7 @@ class EmployeeController extends Controller
           'employee_contact' => $request->employee_contact,
           'employee_address' => $request->employee_address,
           'employee_sallary' => $request->employee_sallary,
+          'employee_join_date' => $request->employee_join_date,
           'employee_type' => $request->employee_type,
           'employee_modified_by' => Auth::user()->getAuthIdentifier(),
           'employee_modified_at' => now()->toDateTimeString()

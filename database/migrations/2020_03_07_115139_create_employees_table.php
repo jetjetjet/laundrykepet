@@ -21,7 +21,7 @@ class CreateEmployeesTable extends Migration
             $table->string('employee_address')->nullable();
             $table->decimal('employee_sallary',16,0)->nullable();
             $table->string('employee_type');
-            
+            $table->dateTime('employee_join_date')->nullable();
             $table->boolean('employee_active');
             $table->dateTime('employee_created_at');
             $table->integer('employee_created_by');

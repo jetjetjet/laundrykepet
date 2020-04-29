@@ -118,26 +118,26 @@ class LexpensesController extends Controller
     public function postDelete(Request $request, $id = null)
     {
         $rules = array('success'=> false,'errorMessages' =>array(), 'debugMassages' =>array());
-    $lexpenses = Lexpenses::where('lexpenses_active', '1')->where('id', $id)->first();
+        $lexpenses = Lexpenses::where('lexpenses_active', '1')->where('id', $id)->first();
  
-    if($lexpenses == null){
-      $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
-      return redirect(action('LexpensesController@index'));
-    }
+        if($lexpenses == null){
+        $request->session()->flash('errorMessages', 'Data tidak ditemukan.');
+        return redirect(action('LexpensesController@index'));
+        }
  
-    try{
+      try{
         $lexpenses->update([
           'lexpenses_active' => '0',
           'lexpenses_modified_by' => Auth::user()->getAuthIdentifier(),
           'lexpenses_modified_at' => now()->toDateTimeString()
         ]);
-        $result['success'] = true;
-        $result['successMessages'] = 'Data ' . $lexpenses->Lexpenses_name . ' berhasil dihapus.';
-        return response()->json($result);
+          $result['success'] = true;
+          $result['successMessages'] = 'Data ' . $lexpenses->Lexpenses_name . ' berhasil dihapus.';
+          return response()->json($result);
       } catch (\Exception $e) {
         array_push($result['errorMessages'], $e->getMessage());
         return response()->json($result);
-    }
+        }
     }
 
 

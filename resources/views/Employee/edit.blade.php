@@ -30,7 +30,17 @@
                 <select class="form-control" id="tipe" name="employee_type">
                   <option value="Laundry" {{ $data->employee_type == 'Laundry' ? ' selected' : '' }} >Laundry</option>
                   <option value="Steam" {{ $data->employee_type == 'Steam' ? ' selected' : '' }} >Steam</option>
+                  <option value="Agen" {{ $data->employee_type == 'Agen' ? ' selected' : '' }} >Agen</option>
                 </select>
+              </div>
+              <div class="form-group">
+                <label>Tgl Masuk</label>
+                <div class="input-group input-group-sm date" data-provide="datepicker" data-date-format="yyyy-mm-dd"  data-date-clear-btn="true">
+                <input type="text" name='employee_join_date' value="{{ request('employee_join_date') ? Carbon\Carbon:: parse(request('employee_join_date'))->format(d-m-y) : date('1-m-yy') }}" class="form-control" autocomplete="off" readonly />
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                  </div>                                
+                </div>
               </div>
               <div class="form-group" style="display : {{ $data->employee_type === 'Steam' ? 'none' : '' }}" id="gaji">
                 <label for="employee_sallary" id="empsal">Gaji</label>

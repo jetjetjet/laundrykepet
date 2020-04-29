@@ -64,6 +64,12 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Lexpenses/Save/{id?}', 'LexpensesController@postEdit')->middleware('can:karyawan_hapus');
     Route::post('Lexpenses/Delete/{id?}', 'LexpensesController@postDelete')->middleware('can:karyawan_hapus');
 
+    Route::get('Lctype/','LctypeController@index')->middleware('can:karyawan_hapus');
+    Route::get('Lctype/List','LctypeController@getGrid')->middleware('can:karyawan_hapus');
+    Route::get('Lctype/Edit/{id?}', 'LctypeController@getEdit')->middleware('can:karyawan_hapus');
+    Route::post('Lctype/Save/{id?}', 'LctypeController@postEdit')->middleware('can:karyawan_hapus');
+    Route::post('Lctype/Delete/{id?}', 'LctypeController@postDelete')->middleware('can:karyawan_hapus');
+
     Route::get('Laundry/Input/{id?}', 'LaundryController@input')->middleware('can:laundry_lihat');
     route::get('Laundry/Print/{id?}', 'LaundryController@generateReceipt')->middleware('can:laundry_cetak');
     Route::post('Laundry/Save/{id?}', 'LaundryController@postEdit')->middleware('can:laundry_simpan');
