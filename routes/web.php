@@ -55,6 +55,7 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::get('Employee/Lists', 'EmployeeController@getEmployeeLists')->middleware('can:karyawan_list');
     Route::get('Employee/Edit/{id?}', 'EmployeeController@getEdit')->middleware('can:karyawan_lihat');
     Route::get('Employee/Search', 'EmployeeController@searchEmployee')->middleware('can:karyawan_cari');
+    Route::get('Employee/SearchAgen', 'EmployeeController@searchAgen')->middleware('can:karyawan_cari');
     Route::post('Employee/Save/{id?}', 'EmployeeController@postEdit')->middleware('can:karyawan_simpan');
     Route::post('Employee/Delete/{id?}', 'EmployeeController@postDelete')->middleware('can:karyawan_hapus');
 
@@ -64,19 +65,23 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('Lexpenses/Save/{id?}', 'LexpensesController@postEdit')->middleware('can:karyawan_hapus');
     Route::post('Lexpenses/Delete/{id?}', 'LexpensesController@postDelete')->middleware('can:karyawan_hapus');
 
-    Route::get('Lctype/','LctypeController@index')->middleware('can:karyawan_hapus');
-    Route::get('Lctype/List','LctypeController@getGrid')->middleware('can:karyawan_hapus');
-    Route::get('Lctype/Edit/{id?}', 'LctypeController@getEdit')->middleware('can:karyawan_hapus');
-    Route::post('Lctype/Save/{id?}', 'LctypeController@postEdit')->middleware('can:karyawan_hapus');
-    Route::post('Lctype/Delete/{id?}', 'LctypeController@postDelete')->middleware('can:karyawan_hapus');
+    Route::get('Lctype/','LctypeController@index')->middleware('can:laundryKategori_simpan');
+    Route::get('Lctype/List','LctypeController@getGrid')->middleware('can:laundryKategori_simpan');
+    Route::get('Lctype/Edit/{id?}', 'LctypeController@getEdit')->middleware('can:laundryKategori_simpan');
+    Route::get('Lctype/Search', 'LctypeController@searchType')->middleware('can:laundryKategori_simpan');
+    Route::post('Lctype/Save/{id?}', 'LctypeController@postEdit')->middleware('can:laundryKategori_simpan');
+    Route::post('Lctype/Delete/{id?}', 'LctypeController@postDelete')->middleware('can:laundryKategori_simpan');
 
     Route::get('Laundry/Input/{id?}', 'LaundryController@input')->middleware('can:laundry_lihat');
+    Route::get('Laundry/View/{id?}', 'LaundryController@view')->middleware('can:laundry_lihat');
     route::get('Laundry/Print/{id?}', 'LaundryController@generateReceipt')->middleware('can:laundry_cetak');
     Route::post('Laundry/Save/{id?}', 'LaundryController@postEdit')->middleware('can:laundry_simpan');
     Route::post('Laundry/ChangeStatus/{id?}/{mode?}', 'LaundryController@postUbahStatus')->middleware('can:laundry_ubahStatus');
     Route::post('Laundry/Pickup/{id?}', 'LaundryController@postPickup')->middleware('can:laundry_antar');
     Route::post('Laundry/Delivery/{id?}', 'LaundryController@postDelivery')->middleware('can:laundry_antar');
     Route::post('Laundry/Delete/{id?}', 'LaundryController@postDelete')->middleware('can:laundry_hapus');
+    Route::post('Laundry/Proses/{id?}/{idDetail?}', 'LaundryController@postProses')->middleware('can:laundry_proses');
+    Route::post('Laundry/DetailSelesai/{id?}/{idDetail?}', 'LaundryController@postSelesai')->middleware('can:laundry_selesai');
 
     Route::get('LCategory/', 'LCategoryController@index')->middleware('can:laundryKategori_list');
     Route::get('LCategory/DropdownList', 'LCategoryController@getDropDownList');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lctype extends Model
 {
-    protected $table = 'lctype';
+    protected $table = 'lctypes';
     public $timestamps = false;
     protected $fillable = ['lctype_name'
       ,'lctype_active'
@@ -26,5 +26,10 @@ class Lctype extends Model
           $model->lctype_modified_by = null;
     
           return $model;
+      }
+    
+      public function getLaundryType($query)
+      {
+          return $query->where('lctype_active', '1')->select('id as lctype_id', 'lctype_name');
       }
 }

@@ -30,7 +30,7 @@
         <table id="grid" class="table table-bordered table-hover">
           <thead>
           <tr>
-            <th>Username</th>
+            <th>{{ trans('fields.username') }}</th>
             <th>Kontak</th>
             <th>Tgl Dibuat</th>
             <th>Diubah Oleh</th>

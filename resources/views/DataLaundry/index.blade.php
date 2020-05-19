@@ -82,12 +82,13 @@
     <table id="grid" class="table table-condensed table-striped table-bordered table-hover" cellspacing="0" width="100%">
       <thead>
         <tr>
-          <th>No. Invoice</th>
-          <th>Pelanggan</th>
-          <th>Delivery</th>
-          <th>Lunas</th>
-          <th>Status</th>
-          <th>Tgl Dibuat</th>
+          <th>{{ trans('fields.no') ." ". trans('fields.invoice')}}</th>
+          <th>{{trans('fields.customer')}}</th>
+          <th>{{trans('fields.qty')}}</th>
+          <th>{{trans('fields.total')}}</th>
+          <th>{{trans('fields.paidoff')}}</th>
+          <th>{{trans('fields.status')}}</th>
+          <th>{{trans('fields.createdAt')}}</th>
         </tr>
       </thead>
     </table>
@@ -108,7 +109,7 @@
           data: 'laundry_invoice',
           width: '120px',
           render: function (data, type, full, meta){
-            let link =  "{{ action('LaundryController@input') . '/' }}" + full.id ;
+            let link =  "{{ action('LaundryController@view') . '/' }}" + full.id ;
             return '<a href="' + link + '">' + full.laundry_invoice + '</a>';
           },
           searchText: true
@@ -118,11 +119,13 @@
           searchText: true
         },
         { 
-          data: 'laundry_delivery',
+          data: 'ldetail_qty',
           width: '40px',
-          render: function(data, type, full, meta){
-            return data === true ? '<span class="badge badge-primary">Ya</span>' : '<span class="badge badge-warning">Tidak</span>' ;
-          },
+          searchText: true
+        },
+        { 
+          data: 'ldetail_total',
+          width: '40px',
           searchText: true
         },
         { 

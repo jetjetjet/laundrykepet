@@ -16,42 +16,7 @@
             <span class="fa fa-save fa-fw"></span>&nbsp;Simpan</button>
             &nbsp;
           @endif
-          @if(!empty($data->id) && Perm::can(['laundry_cetak']))
-            <a href="{{action('LaundryController@generateReceipt') . '/' . $data->id }}" target="_blank" class="btn btn-sm btn-default" id="print">
-            <span class="fa fa-print fa-fw"></span>&nbsp;Cetak</a>
-            &nbsp;
-          @endif
-          @if(!empty($data->id) && empty($data->laundry_executed_at) && Perm::can(['laundry_ubahStatus']))
-            <button id="proses" class="btn btn-sm btn-primary" type="button">
-              <span class="fa fa-check fa-fw"></span>&nbsp;Proses</button>
-            &nbsp;
-          @endif
-          @if(!empty($data->laundry_executed_at) && empty($data->laundry_finished_at) && Perm::can(['laundry_ubahStatus']))
-            <button id="selesai" class="btn btn-sm btn-success" type="button">
-            <span class="fa fa-check fa-fw"></span>&nbsp;Selesai</button>
-            &nbsp;
-          @endif
-          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_delivered_at)) && $data->laundry_delivery && Perm::can(['laundry_antar']))
-            <button class="btn btn-sm btn-warning" type="button" data-toggle="modal" data-target="#modalDelivery">
-            <span class="fa fa-check fa-fw"></span>&nbsp;Antar</button>
-            &nbsp;
-          @endif
-          @if(!empty(($data->laundry_finished_at) && empty($data->laundry_taken_at)) && !$data->laundry_delivery && Perm::can(['laundry_antar']))
-            <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#modalPickup">
-            <span class="fa fa-check fa-fw"></span>&nbsp;Pick-up</button>
-            &nbsp;
-          @endif
         </div>
-        @if(!empty($data->id) && empty($data->laundry_executed_at) && Perm::can(['laundry_hapus']))
-          <div class="float-right">
-            <a href="#" class="btn btn-sm btn-danger" 
-              delete-title="Konfirmasi Hapus Data Laundry"
-              delete-action="{{action('LaundryController@postDelete') . '/' . $data->id }}"
-              delete-message="Apakah anda yakin untuk menghapus data ini?"
-              delete-success-url="{{ action('DataLaundryController@index') }}">
-              <i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>
-          </div>
-        @endif
       </div>  
     </div> 
 </div>  
@@ -70,6 +35,16 @@
                 <label>Nomor Invoice</label>
                 <div class="input-group input-group-sm">
                   <input type="text" name="laundry_invoice" value="{{ $data->laundry_invoice }}" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>{{ trans('fields.name') ." ". trans('fields.agent') }}</label>
+                <div class="input-group input-group-sm">
+                  <select class="form-control" id="agenSearch" name="laundry_agen_id">
+                    @if($data->laundry_customer_id)
+                      <option value="{{$data->laundry_agen_id}}" selected="selected">{{$data->laundry_agen_name}}</option>
+                    @endif
+                  </select>
                 </div>
               </div>
               <div class="form-group">
@@ -122,10 +97,12 @@
               <table id="detailLaundry" class="table table-condensed table-striped table-bordered table-hover table-wordwrap" cellspacing="0" width="100%">
                 <thead>
                   <tr>
-                    <th>Kategori</th>
-                    <th>Tgl. Selesai</th>
-                    <th>Berat/Satuan</th>
-                    <th>Total</th>
+                    <th>{{ trans('fields.category') }}</th>
+                    <th>{{ trans('fields.date') }} {{ trans('fields.finish') }}</th>
+                    <th>{{ trans('fields.pcs') }}</th>
+                    <th>{{ trans('fields.type') }}</th>
+                    <th>{{ trans('fields.condition') }} {{ trans('fields.item') }}</th>
+                    <th>{{ trans('fields.price') }}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -378,6 +355,17 @@ $(document).ready(function ()
       $('#custSearch').attr('data-has-changed', '1');
     });
 
+    //cari agen
+    inputSearch('#agenSearch', '{{ action("EmployeeController@searchAgen") }}', 'resolve', function(item) {
+      return {
+        text: item.employee_name,
+        id: item.id
+      }
+    });
+    $('#custSearch').on('select2:select', function (e) {
+      $('#custSearch').attr('data-has-changed', '1');
+    });
+
     //cari karyawan antar
     inputSearch('#delivSearch', '{{ action("EmployeeController@searchEmployee") }}', '450px', function(item) {
       return {
@@ -490,6 +478,7 @@ $(document).ready(function ()
         text: item.lcategory_name,
         id: item.id,
         price: item.lcategory_price,
+        type: item.lcategory_type,
         days: item.lcategory_days
       }
     });
@@ -498,6 +487,7 @@ $(document).ready(function ()
       var cB = e.params.data;
       var endDate = setupDate(cB.days);
       $targetContainer.find('[name^=dtl][name$="[price]"]').val(cB.price);
+      $targetContainer.find('[name^=dtl][name$="[ldetail_type]"]').val(cB.type);
       $targetContainer.find('[name^=dtl][name$="[ldetail_end_date]"]').val(endDate);
       $targetContainer.attr('data-has-changed', '1');
       

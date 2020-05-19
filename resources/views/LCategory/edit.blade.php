@@ -24,11 +24,19 @@
                 <textarea class="form-control" rows="2" placeholder="Detail" name="lcategory_detail">{{ $data->lcategory_detail }}</textarea>
               </div>
               <div class="form-group">
-                <label for="kontak">Tipe</label>
-                <select class="form-control" id="tipe" name="lcategory_type">
-                  <option value="Kilogram" {{ $data->lcategory_type == 'Kilogram' ? ' selected' : '' }} >Kilogram</option>
-                  <option value="Potong" {{ $data->lcategory_type == 'Potong' ? ' selected' : '' }} >Potong</option>
-                </select>
+                <label>{{trans('fields.type') ." ". trans('fields.category') }}</label>
+                <div class="input-group input-group-sm">
+                  <select class="form-control" id="tipe" name="lcategory_lctype_id">
+                    @if($data->lcategory_lctype_id)
+                      <option value="{{$data->lcategory_lctype_id}}" selected="selected">{{$data->lcategory_lctype_name}}</option>
+                    @endif
+                  </select>
+                  @if(Perm::can(['lctype_tambah']))
+                  <div class="input-group-append">
+                    <button type="button" id="tmbhType" class="btn btn-info btn-flat">Tambah Baru</button>
+                  </div>
+                  @endif
+                </div>
               </div>
               <div class="form-group">
                 <label for="nama">Hari Pengerjaan</label>
@@ -90,6 +98,15 @@
       @endif
     </div>
   </div>
+
+  <div id="typePopup" style="display:none;">
+    <div class="form-horizontal">
+      <div class="form-group required">
+        <label for="nama">{{trans('fields.name') ." ". trans('fields.category')}}</label>
+        <input type="text"  name="lctype_name" placeholder="{{trans('fields.name') .' '. trans('fields.category')}}" class="form-control" required>
+      </div>
+    </div>
+  </div>
 @endsection
 
 
@@ -97,6 +114,36 @@
 <script>
     $(document).ready(function (){
       $('[type=number]').setupMask(0);
+
+      //Modal Tipe
+      $('#tmbhType').on('click', function() {
+        var modal = showPopupForm(
+        $(this),
+        { btnType: 'primary', keepOpen: true },
+        "{{ trans('fields.addNew') .' '. trans('fields.category') }}",
+        $('#typePopup'),
+        '{{ action("LctypeController@postEdit") }}',
+        function ($form){
+            return {
+              lctype_name: $form.find('[name=lctype_name]').val(),
+              lctype_unit: $form.find('[name=lctype_unit]').val(),
+              modal: $form.find('[name=modal]').val()
+            };
+        },
+        //callback
+        function (data){
+          console.log(1, data.messages);
+            toastr.success(data.messages)
+        });
+      });
+
+      //cari tipe
+      inputSearch('#tipe', '{{ action("LctypeController@searchType") }}', '85%', function(item) {
+        return {
+          text: item.lctype_name,
+          id: item.id,
+        }
+      });
     })
 </script>
 @endsection

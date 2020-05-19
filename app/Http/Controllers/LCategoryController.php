@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Model\LCategory;
+use App\Http\Model\Lctype;
 use Validator;
 
 
@@ -19,11 +20,7 @@ class LCategoryController extends Controller
   {
     if ($request->has('q')) {
       $cari = $request->q;
-      $data = LCategory::
-        whereRaw('UPPER(lcategory_name) LIKE UPPER(\'%'.$cari.'%\')')
-        ->where('lcategory_active', '1')
-        ->select('id', 'lcategory_name', 'lcategory_price', 'lcategory_days')
-        ->get();
+      $data = LCategory::searchCategory([], $cari)->get();
       return response()->json($data);
     }
   }
@@ -60,10 +57,13 @@ class LCategoryController extends Controller
 
     if ($id){
       $data = LCategory::join('users as cr', 'lcategory_created_by', 'cr.id')
+      ->leftJoin('lctypes as ty', 'ty.id', 'lcategory_lctype_id')
       ->leftJoin('users as mod', 'lcategory_modified_by', 'mod.id')
       ->where('lcategory_active', '1')
       ->where('lcategories.id', $id)
       ->select('lcategories.id as id', 
+        'ty.id as lcategory_lctype_id',
+        'lctype_name as lcategory_lctype_name',
         'lcategory_name', 
         'lcategory_detail',
         'lcategory_days',
@@ -124,7 +124,7 @@ class LCategoryController extends Controller
         $category = LCategory::create([
           'lcategory_name' => $request->lcategory_name,
           'lcategory_detail' => $request->lcategory_detail,
-          'lcategory_type' => $request->lcategory_type,
+          'lcategory_lctype_id' => $request->lcategory_lctype_id,
           'lcategory_days' => $request->lcategory_days,
           'lcategory_price' => $request->lcategory_price,
           'lcategory_active' => '1',
@@ -139,7 +139,7 @@ class LCategoryController extends Controller
         $category->update([
           'lcategory_name' => $request->lcategory_name,
           'lcategory_detail' => $request->lcategory_detail,
-          'lcategory_type' => $request->lcategory_type,
+          'lcategory_lctype_id' => $request->lcategory_lctype_id,
           'lcategory_days' => $request->lcategory_days,
           'lcategory_price' => $request->lcategory_price,
           'lcategory_modified_by' => Auth::user()->getAuthIdentifier(),

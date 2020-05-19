@@ -32,4 +32,17 @@ class Employee extends Model
         return $query->where('employee_active', '1')
             ->where('employee_type', 'Laundry');
     }
+
+    public function scopeSearchEmployee($query, $filter, $searchQuery)
+    {
+        $q = $query->where('employee_active', '1');
+        foreach($filter as $key => $f)
+        {
+            $q = $q->where($key, $f);
+        }
+        if($searchQuery)
+           $q = $q->whereRaw('UPPER(employee_name) LIKE UPPER(\'%'. $searchQuery .'%\')');
+        
+        return $q;
+    }
 }

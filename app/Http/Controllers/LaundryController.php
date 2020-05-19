@@ -7,6 +7,7 @@ use Auth;
 use App\Http\Model\Laundry;
 use App\Http\Model\LaundryDetail;
 use Validator;
+use Carbon\Carbon;
 
 use PDF;
 
@@ -20,43 +21,28 @@ class LaundryController extends Controller
     $data = new \stdClass();
     $data = Laundry::getFields($data);
     if($id){
-      $data = Laundry::laundryById($id)
-        ->select(
-          'laundries.id as id'
-          ,'laundry_invoice'
-          ,'laundry_customer_id'
-          ,'cus.customer_name as laundry_customer_name'
-          ,'laundry_paid'
-          ,'laundry_paidoff'
-          ,'laundry_delivery'
-          ,'laundry_taken_at'
-          ,'laundry_taken_by'
-          ,'laundry_finished_at'
-          ,'exe.user_name as laundry_executed_by'
-          ,'laundry_executed_at'
-          ,'fin.user_name as laundry_finished_by'
-          ,'laundry_delivered_at'
-          ,'dlv.employee_name as laundry_delivered_by'
-          ,'cr.user_name as laundry_created_by'
-          ,'laundry_created_at'
-          ,'mod.user_name as laundry_modified_by'
-          ,'laundry_modified_at')
-        ->first();
+      $data = Laundry::laundryById($id)->first();
       //jika data tidak ada
       if($data == null){
-        return view('DataLaundry.index')->with(['error' => 'Data laundry tidak Ditemukan']);
+        return view('DataLaundry.index')->with(['error' => 'Data laundry tidak ditemukan!']);
       }
-        $sub = LaundryDetail::detailLaundry($data['id']);
-        $data->sub = $sub->select('ldetails.id',
-          'ldetail_lcategory_id',
-          'lc.lcategory_name as ldetail_lcategory_name',
-          'lc.lcategory_price as price',
-          'ldetail_start_date',
-          DB::raw('TO_CHAR(ldetail_end_date, \'DD-MM-YYYY\') as ldetail_end_date'),
-          'ldetail_qty',
-          'ldetail_total')->get();
-        $diff = $sub->select(DB::raw('sum(ldetail_total) as total'))->first();
-        $data->diff = $diff['total'] - $data['laundry_paid'];
+
+      if($data['laundry_completed'])
+      {
+        return view('DataLaundry.index')->with(['error' => 'Data laundry tidak bisa diubah.']);
+      }
+
+      $sub = LaundryDetail::detailLaundry($data['id']);
+      $data->sub = $sub->select('ldetails.id',
+        'ldetail_lcategory_id',
+        'lc.lcategory_name as ldetail_lcategory_name',
+        'lc.lcategory_price as price',
+        'ldetail_start_date',
+        DB::raw('DATE_FORMAT(ldetail_end_date, \'%d-%m-%Y\') as ldetail_end_date'),
+        'ldetail_qty',
+        'ldetail_total')->get();
+      $diff = $sub->select(DB::raw('sum(ldetail_total) as total'))->first();
+      $data->diff = $diff['total'] - $data['laundry_paid'];
     } else {
       $date = date('01-m-Y');
       $count = Laundry::where('laundry_created_at', '>=', $date)->count();
@@ -64,6 +50,41 @@ class LaundryController extends Controller
     }
     
     return view('Laundry.input')->with('data', $data);
+  }
+
+  public function view(Request $request, $id = null)
+  {
+    $data = new \stdClass();
+    $data = Laundry::laundryById($id)->first();
+    if(!$data){
+      return view('DataLaundry.index')->with(['error' => 'Data laundry tidak ditemukan.']);
+    }
+
+    $sub = LaundryDetail::detailLaundry($data['id']);
+    $data->sub = $sub->select('ldetails.id',
+      'lctype_name as ldetail_type',
+      'ldetail_condition',
+      'ldetail_lcategory_id',
+      'ldetail_executed_at',
+      'ldetail_finished_at',
+      'ldetail_delivered_at',
+      'ldetail_taken_at',
+      'lc.lcategory_name as ldetail_lcategory_name',
+      'lc.lcategory_price as price',
+      DB::raw('DATE_FORMAT(ldetail_start_date, \'%d-%m-%Y\') as ldetail_start_date'),
+      DB::raw('DATE_FORMAT(ldetail_end_date, \'%d-%m-%Y\') as ldetail_end_date'),
+      'ldetail_qty',
+      DB::raw('FORMAT(ldetail_total,0) as ldetail_total'))->get();
+    $ttl = $sub->select(DB::raw('sum(ldetail_total) as total'))->first();
+    $diff = $ttl['total'] - $data['laundry_paid'];
+    $data->total = number_format($ttl['total']) ?? string;
+    $data->diff = number_format($diff) ?? string;
+    $isEdit = $sub->whereNotNull('ldetail_executed_at')->select(DB::raw('1 as is_edit'))->first();
+    $data->isEdit = $isEdit['is_edit'];
+    $finish = LaundryDetail::detailLaundry($data['id'])->whereNull('ldetail_executed_at')->select(DB::raw('count(1) as is_finish'))->first();
+    $data->isFinish = $finish['is_finish'];
+    
+    return view('Laundry.view')->with('data', $data);
   }
 
   public function generateReceipt($id)
@@ -106,34 +127,23 @@ class LaundryController extends Controller
     //return view('Laundry.receipt')->with('data', $data);
   }
 
-  public function postUbahStatus(Request $request, $id, $mode)
+  public function postProses(Request $request, $id = null, $idDetail = null)
   {
     $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
-    
-    $inputs = $request->all();
     $loginId = Auth::user()->getAuthIdentifier();
-    $msg = "";
-    try{
-      $laundry = Laundry::where('laundry_active', '1')->where('id', $id)->firstOrFail();
-      switch($mode){
-        case "execute":
-          self::execute($laundry);
-          $msg = "diproses.";
-        break;
-        case "finish":
-          self::finish($laundry, $inputs);
-          $msg = "diselesaikan.";
-        break;
-        case "delivery":
-          self::delivery($laundry);
-          $msg = "diantar.";
-        break;
-        default:
-          $result['errorMessages'] = Array("Transaksi tidak diketahui");
-          return response()->json($result);
-      }
+    try {
+      $detail = LaundryDetail::where('ldetail_active', '1')
+        ->where('ldetail_laundry_id', $id)
+        ->where('id', $idDetail);
+
+      $detail->update([
+      'ldetail_executed_by' => $loginId,
+      'ldetail_executed_at' => now()->toDateTimeString(),
+      'ldetail_modified_at' => now()->toDateTimeString(),
+      'ldetail_modified_by' => $loginId
+      ]);
       $result['success'] = true;
-      $result['successMessages'] = 'Data ' . $laundry->laundry_invoice . ' berhasil '. $msg;
+      $result['successMessages'] = 'Item berhasil diproses.';
       return response()->json($result);
     } catch (\Exception $e) {
       array_push($result['errorMessages'], $e->getMessage());
@@ -141,43 +151,49 @@ class LaundryController extends Controller
     }
   }
 
-  private function execute($model)
+  public function postSelesai(Request $request, $id = null, $idDetail = null)
   {
-    return $model->update([
-      'laundry_executed_at' => now()->toDateTimeString(),
-      'laundry_executed_by' => Auth::user()->getAuthIdentifier(),
-      'laundry_modified_at' => now()->toDateTimeString(),
-      'laundry_modified_by' => Auth::user()->getAuthIdentifier()
-    ]);
-  }
+    $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
+    $loginId = Auth::user()->getAuthIdentifier();
+    try {
+      $detail = LaundryDetail::where('ldetail_active', '1')
+        ->where('ldetail_laundry_id', $id)
+        ->where('id', $idDetail);
 
-  private function finish($model, $inputs)
-  {
-    $paid_off = $inputs['dp'] + $inputs['leftover'];
-    return $model->update([
-      'laundry_paid' => $paid_off,
-      'laundry_paidoff' => '1',
-      'laundry_finished_at' => now()->toDateTimeString(),
-      'laundry_finished_by' => Auth::user()->getAuthIdentifier(),
-      'laundry_modified_at' => now()->toDateTimeString(),
-      'laundry_modified_by' => Auth::user()->getAuthIdentifier()
-    ]);
-  }
+      $detail->update([
+      'ldetail_finished_by' => $loginId,
+      'ldetail_finished_at' => now()->toDateTimeString(),
+      'ldetail_modified_at' => now()->toDateTimeString(),
+      'ldetail_modified_by' => $loginId
+      ]);
 
-  private function delivery($model)
-  {
-    return $model->update([
-      'laundry_delivered_at' => now()->toDateTimeString(),
-      'laundry_delivered_by' => Auth::user()->getAuthIdentifier(),
-      'laundry_modified_at' => now()->toDateTimeString(),
-      'laundry_modified_by' => Auth::user()->getAuthIdentifier()
-    ]);
+      $cekLaundry = LaundryDetail::where('ldetail_active', '1')
+        ->where('ldetail_laundry_id', $id)
+        ->whereNull('ldetail_finished_at')
+        ->first();
+      if ($cekLaundry == null){
+        $laundry = Laundry::where('laundry_active', '1')->where('id', $id);
+
+        $laundry->update([
+          'laundry_modified_at' => now()->toDateTimeString(),
+          'laundry_modified_by' => $loginId,
+          'laundry_finished' => '1'
+        ]);
+      }
+      $result['success'] = true;
+      $result['successMessages'] = 'Item berhasil diselesaikan.';
+      return response()->json($result);
+    } catch (\Exception $e) {
+      array_push($result['errorMessages'], $e->getMessage());
+      return response()->json($result);
+    }
   }
 
   public function postEdit(Request $request, $id = null)
   {
     $rules = array(
-      'laundry_customer_id' => 'required'
+      'laundry_customer_id' => 'required',
+      'laundry_agen_id' => 'required'
     );
 
     $inputs = $request->all();
@@ -207,12 +223,13 @@ class LaundryController extends Controller
         $result['success'] = true;
       });
     } catch (\Exception $e) {
+      dd($e);
       $request->session()->flash('errorMessages', 'Data gagal ditambah.');
       return redirect()->back()->withErrors($validator)->withInput($inputs);
     }
     $msg = $id == null ? ' ditambah.' : ' diubah.';
     $request->session()->flash('successMessages', 'Data Laundry berhasil '. $msg);
-    return redirect(action('LaundryController@input', array('id' => $result['laundry_id'])));
+    return redirect(action('LaundryController@view', array('id' => $result['laundry_id'])));
   }
 
   public function saveLaundry(&$result, $id, $input, $loginId)
@@ -220,14 +237,14 @@ class LaundryController extends Controller
     $total = isset($input['laundry_total']) ? $input['laundry_total'] : 0;
     $bayar = isset($input['laundry_paid']) ? $input['laundry_paid'] : 1;
     $laundry = null;
-    $laundry_delivery =  isset($input['laundry_delivery']) ? $input['laundry_delivery'] : false;
-    $kurir = isset($input['laundry_delivered_id']) ? $input['laundry_delivered_id'] : false ;
-    $paidoff = $total - $bayar == 0 ? true : false;
+    $laundry_delivery =  isset($input['laundry_delivery']) ? $input['laundry_delivery'] == true ? 1:0 : 0;
+    $paidoff = $total - $bayar == 0 ? 1 : 0;
     try{
       if ($id == null){
         $laundry = Laundry::create([
           'laundry_invoice' => $input['laundry_invoice'],
           'laundry_customer_id' => $input['laundry_customer_id'],
+          'laundry_agen_id' => $input['laundry_agen_id'],
           'laundry_paid' => $input['laundry_paid'],
           'laundry_paidoff' => $paidoff,
           'laundry_delivery' => $laundry_delivery,
@@ -238,26 +255,21 @@ class LaundryController extends Controller
         ]);
       } else {
         $laundry = Laundry::where('laundry_active', '1')->where('id', $id)->firstOrFail();
-
-        if($kurir){
-          $laundry->update([
-            'laundry_delivered_by' => $kurir
-          ]);
-        } else {
-          $laundry->update([
-            'laundry_customer_id' => $input['laundry_customer_id'],
-            'laundry_paid' => $input['laundry_paid'],
-            'laundry_paidoff' => $paidoff,
-            'laundry_delivery' => $laundry_delivery,
-            'laundry_modified_at' => now()->toDateTimeString(),
-            'laundry_modified_by' => $loginId
-          ]);
-        }
+        $laundry->update([
+          'laundry_customer_id' => $input['laundry_customer_id'],
+          'laundry_agen_id' => $input['laundry_agen_id'],
+          'laundry_paid' => $input['laundry_paid'],
+          'laundry_paidoff' => $paidoff,
+          'laundry_delivery' => $laundry_delivery,
+          'laundry_modified_at' => now()->toDateTimeString(),
+          'laundry_modified_by' => $loginId
+        ]);
       }
       
       $result['laundry_id'] = $laundry->id ?: $id;
       return true;
     } catch (\Exception $e) {
+      dd($e);
       array_push($result['errorMessages'], $e);
       throw new Exception('rollbacked');
       return false;
@@ -281,6 +293,7 @@ class LaundryController extends Controller
           ]);
       return true;
     } catch(Exception $e){
+      dd($e);
       array_push($result['errorMessages'], $e);
       throw new Exception('rollbacked');
       return false;
@@ -297,8 +310,9 @@ class LaundryController extends Controller
             'ldetail_laundry_id' => $id,
             'ldetail_lcategory_id' => $dtl->ldetail_lcategory_id,
             'ldetail_qty' => $dtl->ldetail_qty,
+            'ldetail_condition' => $dtl->ldetail_condition,
             'ldetail_start_date' => now()->toDateTimeString(),
-            'ldetail_end_date' => $dtl->ldetail_end_date,
+            'ldetail_end_date' => Carbon::parse($dtl->ldetail_end_date)->format('Y-m-d'),
             'ldetail_total' => $dtl->ldetail_total,
             'ldetail_active' => '1',
             'ldetail_created_at' => now()->toDateTimeString(),
@@ -310,7 +324,8 @@ class LaundryController extends Controller
             'ldetail_laundry_id' => $id,
             'ldetail_lcategory_id' => $dtl->ldetail_lcategory_id,
             'ldetail_qty' => $dtl->ldetail_qty,
-            'ldetail_end_date' => $dtl->ldetail_end_date,
+            'ldetail_condition' => $dtl->ldetail_condition,
+            'ldetail_end_date' => Carbon::parse($dtl->ldetail_end_date)->format('Y-m-d'),
             'ldetail_total' => $dtl->ldetail_total,
             'ldetail_modified_at' => now()->toDateTimeString(),
             'ldetail_modified_by' =>$loginId
@@ -319,6 +334,7 @@ class LaundryController extends Controller
       }
       return true;
     } catch(\Exception $e) {
+      dd(1,$e);
       array_push($result['errorMessages'], $e);
       throw new Exception('rollbacked');
       return false;

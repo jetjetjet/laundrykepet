@@ -49,6 +49,50 @@ $('body')
       });
     });
 })
+.on('click', '[change-action]', function (e){
+  e.preventDefault();
+
+  var href = $(this).attr('change-action');
+  var title = $(this).attr('change-title');
+  var message = $(this).attr('change-message');
+  var successUrl = $(this).attr('change-success-url');
+  var $table = $(this).closest('table');
+
+  // Enables modal on current element.
+  $(this).attr('data-toggle', 'modal');
+  $(this).attr('data-target', '#uiModalInstance');
+
+  var $modal = cloneModal();
+  $modal
+    .modal({
+        show: false,
+    })
+    .on('show.bs.modal', function (){
+      // Draws text.
+      $modal.find('.modal-title').html(title);
+      $modal.find('.modal-body').html('<span class="fa fa-question-circle fa-lg"></span>&nbsp;' + message);
+
+      // Shows and attaches click event.
+      $modal.find('.modal-action-cancel').removeClass('d-none')
+      $modal.find('.modal-action-yes').removeClass('d-none')
+      .click(function (){
+          $modal.modal('hide');
+          $.post(href, function (data){
+            console.log(successUrl)
+            if (!data) return;
+
+            if (data.success){
+              toastr.success(data.successMessages)
+              setTimeout(() => {
+                window.location = successUrl;
+              }, 1000)
+            } else {
+              showErrorMessages(data);
+            }
+          });
+      });
+    });
+})
 
 function showErrorMessages(data){
   if (!data) return;

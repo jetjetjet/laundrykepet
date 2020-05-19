@@ -60,13 +60,22 @@ class Laundry extends Model
   {
     $q = $query->join('users as cr', 'laundry_created_by', 'cr.id')
       ->join('customers as cus', 'laundry_customer_id', 'cus.id')
-      ->leftJoin('employees as dlv', 'laundry_delivered_by', 'dlv.id')
-      ->leftJoin('users as exe', 'laundry_executed_by', 'exe.id')
       ->leftJoin('users as mod', 'laundry_modified_by', 'mod.id')
-      ->leftJoin('users as fin', 'laundry_finished_by', 'fin.id')
       ->where([
         'laundry_active' => '1',
-        'laundries.id' => $id]);
+        'laundries.id' => $id])
+      ->select(
+        'laundries.id as id'
+        ,'laundry_invoice'
+        ,'laundry_customer_id'
+        ,'cus.customer_name as laundry_customer_name'
+        ,'laundry_paid'
+        ,'laundry_paidoff'
+        ,'laundry_delivery'
+        ,'cr.user_name as laundry_created_by'
+        ,'laundry_created_at'
+        ,'mod.user_name as laundry_modified_by'
+        ,'laundry_modified_at');
     return $q;
   }
 

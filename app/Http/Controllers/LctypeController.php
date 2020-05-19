@@ -66,8 +66,9 @@ class LctypeController extends Controller
 
     public function postEdit(Request $request, $id = null)
     {
+        $result = array('success' => false, 'messages' => array(), 'errorMessages' => array(), 'debugMessages' => array());
         $rules = array(
-            'lctype_name' => 'required'
+            'lctype_name' => 'required',
           );
        
           $inputs = $request->all();
@@ -85,7 +86,7 @@ class LctypeController extends Controller
                 'lctype_created_by' => Auth::user()->getAuthIdentifier(),
                 'lctype_created_at' => now()->toDateTimeString()
               ]);
-              $request->session()->flash('successMessages', 'Data ' . $lctype->lctype_name . ' berhasil ditambah.');
+              $result['messages'] = 'Data ' . $lctype->lctype_name . ' berhasil ditambah.';
             } else {
               $lctype = lctype::where('lctype_active', '1')->where('id', $request->id)->firstOrFail();
               $lctype->update([
@@ -93,12 +94,13 @@ class LctypeController extends Controller
                 'lctype_modified_by' => Auth::user()->getAuthIdentifier(),
                 'lctype_modified_at' => now()->toDateTimeString()
               ]);
-              $request->session()->flash('successMessages', 'Data ' . $lctype->lctype_name . ' berhasil diubah.');
-      
+              $result['messages'] = 'Data ' . $lctype->lctype_name . ' berhasil diubah.';
             }
-            return redirect(action('lctypeController@getEdit', array('id' => $lctype->id)));
+            $result['success'] = true;
+            return response()->json($result, 200);
           } catch(\Excaption $e){
-            return redirect()->back()->with(['errorMessages' => $e->getMessage()]);
+            $result['errorMessages'] = $e->getMessage();
+            return response()->json($result, 500);
           }
     }
 
@@ -125,5 +127,18 @@ class LctypeController extends Controller
         array_push($result['errorMessages'], $e->getMessage());
         return response()->json($result);
         }
+    }
+
+    public function searchType(Request $request)
+    {
+      if ($request->has('q')) {
+        $cari = $request->q;
+        $data = Lctype::
+          whereRaw('UPPER(lctype_name) LIKE UPPER(\'%'.$cari.'%\')')
+          ->where('lctype_active', '1')
+          ->select('id', 'lctype_name')
+          ->get();
+        return response()->json($data);
+      }
     }
 }

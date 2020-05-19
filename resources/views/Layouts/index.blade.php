@@ -103,7 +103,7 @@
           <button type="button" style="min-width: 75px;" class="btn btn-default btn-sm d-none modal-action-ok font-bold" data-dismiss="modal">Ok</button>
           <button type="button" style="min-width: 75px;" class="btn btn-success btn-sm d-none modal-action-save font-bold">Simpan</button>
           <button type="button" style="min-width: 75px;" class="btn btn-sm d-none modal-action-yes-option2 font-bold" >Simpan</button>
-          <button type="button" style="min-width: 75px;" class="btn btn-sm d-none modal-action-yes font-bold">Ya</button>
+          <button type="button" style="min-width: 75px;" class="btn btn-sm btn-info d-none modal-action-yes font-bold">Ya</button>
         </div>
       </div>
     </div>

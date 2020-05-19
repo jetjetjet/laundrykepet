@@ -132,7 +132,6 @@ class EmployeeController extends Controller
 
   public function searchEmployee(Request $request)
   {
-
     if ($request->has('q')) {
       $cari = $request->q;
       $data = Employee::
@@ -141,6 +140,14 @@ class EmployeeController extends Controller
         ->where('employee_type', 'Laundry')
         ->select('id', 'employee_name')
         ->get();
+      return response()->json($data);
+    }
+  }
+  public function searchAgen(Request $request)
+  {
+    if ($request->has('q')) {
+      $cari = $request->q;
+      $data = Employee::searchEmployee(Array('employee_type' => 'Agen'), $cari)->get();
       return response()->json($data);
     }
   }

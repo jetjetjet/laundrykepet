@@ -40,6 +40,7 @@ class LaundryDetail extends Model
   public function scopeDetailLaundry($query, $id)
   {
     $q = $query->join('lcategories as lc', 'lc.id', 'ldetail_lcategory_id')
+      ->join('lctypes as lt', 'lt.id', 'lcategory_lctype_id')
       ->where([
         'ldetail_active' => '1',
         'ldetail_laundry_id' => $id

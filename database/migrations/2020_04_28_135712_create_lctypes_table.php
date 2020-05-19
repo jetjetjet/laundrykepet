@@ -15,12 +15,12 @@ class CreateLctypesTable extends Migration
     {
         Schema::create('lctypes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('lctypes_name',50);
-            $table->boolean('lctypes_active');
-            $table->dateTime('lctypes_created_at');
-            $table->integer('lctypes_created_by');
-            $table->dateTime('lctypes_modified_at')->nullable();
-            $table->integer('lctypes_modified_by')->nullable();
+            $table->string('lctype_name',50);
+            $table->boolean('lctype_active');
+            $table->dateTime('lctype_created_at');
+            $table->integer('lctype_created_by');
+            $table->dateTime('lctype_modified_at')->nullable();
+            $table->integer('lctype_modified_by')->nullable();
         });
     }
 

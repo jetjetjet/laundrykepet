@@ -9,6 +9,8 @@
   $price = $row->price ?? '';
   $id = $row->id ?? '';
   $endDate = $row->ldetail_end_date ?? '' ;
+  $tipe = $row->ldetail_type ?? '';
+  $condition = $row->ldetail_condition ?? '';
 ?>
 
 <tr class="subitem">
@@ -32,6 +34,14 @@
   </td>
   <td>
     <input type="number" name="dtl[{{ $rowIndex }}][ldetail_qty]" value="{{$qty}}" class="form-control input-sm text-right" maxlength="18"
+    autocomplete="off" {{ !empty($data->laundry_executed_at) ? 'readonly' : '' }} />
+  </td>
+  <td>
+    <input type="text" name="dtl[{{ $rowIndex }}][ldetail_type]" value="{{$tipe}}" class="form-control input-sm text-right" maxlength="18"
+    autocomplete="off" readonly />
+  </td>
+  <td>
+  <input type="text" name="dtl[{{ $rowIndex }}][ldetail_condition]" value="{{$condition}}" class="form-control input-sm text-right" maxlength="18"
     autocomplete="off" {{ !empty($data->laundry_executed_at) ? 'readonly' : '' }} />
   </td>
   <td>
