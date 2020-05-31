@@ -167,11 +167,13 @@
     </a>
   </li>
   @endif
+  @if(Perm::can(['peminjam_simpan']))
   <li class="nav-item">
-    <a href="{{ action("LoginController@getLogoff") }}" class="nav-link">
-      <i class="nav-icon fa fa-sign-out-alt"></i>
-      <p>Keluar</p>
+    <a href="{{ action("LoanController@index") }}" class="nav-link">
+      <i class="nav-icon fa fa-clipboard"></i>
+      <p>Pinjaman</p>
     </a>
   </li>
+  @endif
   <!-- <li class="nav-header">EXAMPLES</li> -->
 </ul>
