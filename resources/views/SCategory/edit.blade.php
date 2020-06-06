@@ -16,11 +16,11 @@
               <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <div class="form-group">
-                <label for="nama">Nama Kategori</label>
+                <label for="nama">{{ trans('fields.namaC') }}</label>
                 <input type="text" name="scategory_name" value="{{ $data->scategory_name }}" class="form-control" placeholder="Nama Kategori">
               </div>
               <div class="form-group">
-                <label for="detail">Detail</label>
+                <label for="detail">{{ trans('fields.detail') }}</label>
                 <textarea class="form-control" rows="2" placeholder="Detail" name="scategory_detail">{{ $data->scategory_detail }}</textarea>
               </div>
               <div class="form-group">
@@ -31,7 +31,7 @@
                 </select>
                 </div>
               <div class="form-group">
-                <label for="harga">Harga</label>
+                <label for="harga">{{ trans('fields.price') }}</label>
                 <input type="number" name="scategory_price" value="{{ $data->scategory_price }}" class="form-control" id="scategory_price" placeholder="Harga">
               </div>
               @if(Perm::can(['steamKategori_simpan']))
@@ -63,20 +63,20 @@
         <div class="card-footer pd-20">
           <div class="row">
             <div class="col-12">
-              <label>Dibuat Oleh</label>
+              <label>{{ trans('fields.createdBy') }}</label>
               <input type="text" class="form-control" value="{{ $data->scategory_created_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Dibuat Tgl</label>
+              <label>{{ trans('fields.dibuatT') }}</label>
               <input type="text" class="form-control" value="{{ \carbon\carbon::parse($data->scategory_created_at)->format('d-M-Y')}}" readonly>
             </div>
             @if (!empty($data->scategory_modified_at))
             <div class="col-12">
-              <label>Diubah Oleh</label>
+              <label>{{ trans('fields.modifiedBy') }}</label>
               <input type="text" class="form-control" value="{{ $data->scategory_modified_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Diubah Tgl</label>
+              <label>{{ trans('fields.diubahT') }}</label>
               <input type="text" class="form-control"value="{{ \carbon\carbon::parse($data->scategory_modified_at)->format('d-M-Y')}}" readonly>
             </div>
             @endif

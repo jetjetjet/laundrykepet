@@ -2,7 +2,7 @@
 
 <?php $title = 'Karyawan' ?>
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="{{ url('/') }}">Karyawan</a></li>
+  <li class="breadcrumb-item active"><a href="{{ url('/') }}"> {{ trans('fields.karyawan') }} </a></li>
 @endsection
 
 @section('container')
@@ -21,13 +21,13 @@
         <table id="grid" class="table table-bordered table-hover">
           <thead>
           <tr>
-            <th>Nama</th>
-            <th>Kontak</th>
-            <th>Tipe</th>
-            <th>Tgl Dibuat</th>
-            <th>Dibuat Oleh</th>
-            <th>Tgl Diubah</th>
-            <th>Diubah Oleh</th>
+            <th> {{ trans('fields.name') }} </th>
+            <th> {{ trans('fields.cp') }} </th>
+            <th> {{ trans('fields.type') }} </th>
+            <th> {{ trans('fields.tgldibuat') }} </th>
+            <th> {{ trans('fields.createdBy') }} </th>
+            <th> {{ trans('fields.tgldiubah') }} </th>
+            <th> {{ trans('fields.modifiedBy') }} </th>
           </tr>
           </thead>
         </table>

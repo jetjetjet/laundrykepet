@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="{{ url('/') }}">Data Laundry</a></li>
+  <li class="breadcrumb-item active"><a href="{{ url('/') }}"> {{ trans('fields.dataL') }} </a></li>
 @endsection
 
 @section('container')
@@ -29,7 +29,7 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
-          <label for="nama">Nomor Invoice</label>
+          <label for="nama"> {{ trans('fields.nomorIn') }} </label>
           <div class="input-group input-group-sm">
             <input type="text" name="invoice" class="form-control filter" >
           </div>
@@ -37,7 +37,7 @@
       </div>
       <div class="col-sm-6">
         <div class="form-group input-group-sm">
-          <label for="nama">Nama Pelanggan</label>
+          <label for="nama"> {{ trans('fields.customerName') }} </label>
           <div class="input-group input-group-sm">
             <input type="text" name="customer" class="form-control filter" >
           </div>
@@ -47,7 +47,7 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
-          <label for="nama">Status Pembayaran</label>
+          <label for="nama"> {{ trans('fields.statusPem') }} </label>
           <div class="input-group input-group-sm">
             <select name="lunas" class="form-control filter" >
               <option value="All">Semua</option>
@@ -59,7 +59,7 @@
       </div>
       <div class="col-sm-6">
         <div class="form-group">
-          <label for="nama">Status</label>
+          <label for="nama"> {{ trans('fields.status') }} </label>
           <div class="input-group input-group-sm">
             <select id="status" name="status" class="form-control filter" >
               <option value="All">Semua</option>

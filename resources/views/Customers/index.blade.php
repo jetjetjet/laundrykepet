@@ -3,7 +3,7 @@
 <?php $title = 'Data Pelanggan' ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">Pelanggan</a></li>
+  <li class="breadcrumb-item active"><a href="#"> {{ trans('fields.customer') }} </a></li>
 @endsection
 
 @section('container')
@@ -34,13 +34,13 @@
         <table id="grid" class="table table-bordered table-hover">
           <thead>
           <tr>
-            <th>Nama Pelanggan</th>
-            <th>Alamat</th>
-            <th>Kontak</th>
-            <th>Tgl Dibuat</th>
-            <th>Dibuat Oleh</th>
-            <th>Tgl Diubah</th>
-            <th>Diubah Oleh</th>
+            <th> {{ trans('fields.customerName') }} </th>
+            <th> {{ trans('fields.alamat') }} </th>
+            <th> {{ trans('fields.cp') }} </th>
+            <th> {{ trans('fields.tgldibuat') }} </th>
+            <th> {{ trans('fields.createdBy') }} </th>
+            <th> {{ trans('fields.tgldiubah') }} </th>
+            <th> {{ trans('fields.modifiedBy') }} </th>
           </tr>
           </thead>
         </table>

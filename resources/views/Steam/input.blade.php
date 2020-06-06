@@ -63,7 +63,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>Nama Pelanggan</label>
+                <label>{{ trans('fields.customerName') }}</label>
                 <div class="input-group input-group-sm">
                 @if(empty($data->steam_executed_at))
                   <select class="form-control" id="custSearch" name="steam_customer_id">
@@ -83,7 +83,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>Tgl Masuk</label>
+                <label>{{ trans('fields.tglmasuk') }}</label>
                 <div class="input-group input-group-sm date" data-provide="datepicker" data-date-format="dd-mm-yyyy"  data-date-clear-btn="true">
                     <input type="text" name="startDate" value="{{ request('startDate') ? Carbon\Carbon::parse(request('startDate'))->format('d-m-Y') : date('1-M-Y') }}" class="form-control" 
                       autocomplete="off" required>
@@ -115,9 +115,9 @@
               <table id="detailSteam" class="table table-condensed table-striped table-bordered table-hover table-wordwrap" cellspacing="0" width="100%">
                 <thead>
                   <tr>
-                    <th>Kategori Paket</th>
-                    <th>No. Plat</th>
-                    <th>Harga</th>
+                    <th>{{ trans('fields.kategoriP') }}</th>
+                    <th>{{ trans('fields.noP') }}</th>
+                    <th>{{ trans('fields.price') }}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -160,20 +160,20 @@
           <div class="card-footer pd-20">
             <div class="row">
               <div class="col-12">
-                <label>Dibuat Oleh</label>
+                <label>{{ trans('fields.createdBy') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->steam_created_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Dibuat Tgl</label>
+                <label>{{ trans('fields.dibuatT') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ \carbon\carbon::parse($data->steam_created_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @if (!empty($data->steam_modified_at))
               <div class="col-12">
-                <label>Diubah Oleh</label>
+                <label>{{ trans('fields.modifiedBy') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->steam_modified_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diubah Tgl</label>
+                <label>{{ trans('fields.diubahT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->steam_modified_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
@@ -183,27 +183,27 @@
                 <input type="text" class="form-control form-control-sm" value="{{ $data->steam_modified_by}}" readonly>
               </div> -->
               <div class="col-12">
-                <label>Diproses Tgl</label>
+                <label>{{ trans('fields.diprosesT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->steam_execute_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->steam_finished_at))
               <div class="col-12">
-                <label>Diselesaikan Oleh</label>
+                <label>{{ trans('fields.DiselesaikanO') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->steam_finished_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diselesaikan Tgl</label>
+                <label>{{ trans('fields.DiselesaikanT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->steam_finished_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->steam_taken_at))
               <div class="col-12">
-                <label>Diambil Oleh</label>
+                <label>{{ trans('fields.diambilO') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->steam_taken_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diambil Tgl</label>
+                <label>{{ trans('fields.diambilT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->steam_taken_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
@@ -218,16 +218,16 @@
 <div id="custPopup" style="display:none;">
   <div class="form-horizontal">
     <div class="form-group required">
-      <label for="nama">Nama</label>
+      <label for="nama">{{ trans('fields.name') }}</label>
       <input type="hidden"  name="modal" value="1"  class="form-control">
       <input type="text"  name="customer_name" placeholder="Nama Pelanggan" class="form-control" required>
     </div>
     <div class="form-group required">
-      <label for="kontak">Kontak</label>
+      <label for="kontak">{{ trans('fields.cp') }}</label>
       <input type="text" name="customer_phone" class="form-control" id="kontak" placeholder="Kontak Pelanggan" required>
     </div>
     <div class="form-group">
-      <label for="alamat">Alamat</label>
+      <label for="alamat">{{ trans('fields.alamat') }}</label>
       <textarea class="form-control" rows="2" placeholder="Alamat" name="customer_address"></textarea>
     </div>
   </div>
@@ -236,11 +236,11 @@
 <div id="finishedPopup" class="d-none">
   <div class="form-horizontal">
     <div class="form-group required">
-      <label for="nama">DP</label>
+      <label for="nama">{{ trans('fields.dp') }}</label>
       <input type="number" value="{{$data->steam_paid}}" id="dp" name="dp" class="form-control text-right popup-number" readonly>
     </div>
     <div class="form-group required">
-      <label for="nama">Sisa Bayar</label>
+      <label for="nama">{{ trans('fields.sisaB') }}</label>
       <input type="number" id="leftover" value="{{ isset($data->diff) ? $data->diff : '' }}" min="{{ isset($data->diff) ? $data->diff : '' }}" max="{{ isset($data->diff) ? $data->diff : '' }}" name="leftover" class="form-control text-right popup-number" required>
     </div>
   </div>

@@ -2,7 +2,7 @@
 
 <?php $title = 'Expense' ?>
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="{{ url('/') }}">Expense</a></li>
+  <li class="breadcrumb-item active"><a href="{{ url('/') }}"> {{ trans('fields.expense') }} </a></li>
 @endsection
 
 @section('container')

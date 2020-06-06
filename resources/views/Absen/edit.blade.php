@@ -5,8 +5,8 @@
 ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">Laundry Absen</a></li>
-  <li class="breadcrumb-item active" aria-current="page">{{ empty($data->id) ? 'Tambah Data' : 'Ubah Data'}}</li>
+  <li class="breadcrumb-item active"><a href="#"> {{ trans('fields.laundryabsen') }} </a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{ empty($data->id) ? 'Tambah Data' : 'Ubah Data' }}</li>
 @endsection
 
 @section('container')
@@ -20,16 +20,16 @@
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
               <fieldset class="form-fieldset">
-                <legend>Catatan</legend>
+                <legend>{{ trans('fields.catatan') }}</legend>
                 <div class="form-group">
-                  <label for="nama">Keterangan</label>
+                  <label for="nama">{{ trans('fields.ket') }}</label>
                   <div class="wd-md-80p">
                   <textarea class="form-control" rows="2" placeholder="Detail" name="labsen_detail" {!! $readOnly !!}>{{ $data->labsen_detail }}</textarea>
                   </div>
                 </div>
               </fieldset>
               <fieldset class="form-fieldset">
-                <legend>Absen</legend>
+                <legend>{{ trans('fields.absen') }}</legend>
                 <div class="row row-sm mg-b-10">
                 @foreach($data->employeeList as $emp)
                 <?php
@@ -47,7 +47,7 @@
               </fieldset>
               <br>
               @if(empty($data->id) && Perm::can(['labsen_simpan']))
-                <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-sm btn-primary">{{ trans('fields.simpan') }}</button>
               @endif
               @if($data->id)
                 <!-- @if(Perm::can(['labsen_hapus']))
@@ -71,20 +71,20 @@
       <div class="card-footer pd-20">
         <div class="row">
           <div class="col-12">
-            <label>Dibuat Oleh</label>
+            <label>{{ trans('fields.createdBy') }}</label>
             <input type="text" class="form-control" value="{{ $data->labsen_created_by}}" readonly>
           </div>
           <div class="col-12">
-            <label>Dibuat Tgl</label>
+            <label>{{ trans('fields.dibuatT') }}</label>
             <input type="text" class="form-control" value="{{ \carbon\carbon::parse($data->labsen_created_at)->format('d-M-Y')}}" readonly>
           </div>
           @if (!empty($data->labsen_modified_at))
           <div class="col-12">
-            <label>Diubah Oleh</label>
+            <label>{{ trans('fields.modifiedBy') }}</label>
             <input type="text" class="form-control" value="{{ $data->labsen_modified_by}}" readonly>
           </div>
           <div class="col-12">
-            <label>Diubah Tgl</label>
+            <label>{{ trans('fields.diubahT') }}</label>
             <input type="text" class="form-control"value="{{ \carbon\carbon::parse($data->labsen_modified_at)->format('d-M-Y')}}" readonly>
           </div>
           @endif

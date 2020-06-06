@@ -4,7 +4,7 @@
 ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">Laporan</a></li>
+  <li class="breadcrumb-item active"><a href="#"> {{ trans('fields.laporan') }} </a></li>
   <li class="breadcrumb-item active" aria-current="page">Laundry</li>
 @endsection
 
@@ -25,7 +25,7 @@
           <div class="row">
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="nama">Tgl Awal</label>
+                <label for="nama"> {{ trans('fields.tglawal') }} </label>
                 <div class="input-group input-group-sm date" data-provide="datepicker" data-date-format="dd-mm-yyyy"  data-date-clear-btn="true">
                     <input type="text" name="startDate" value="{{ request('startDate') ? Carbon\Carbon::parse(request('startDate'))->format('d-m-Y') : date('1-M-Y') }}" class="form-control" 
                       autocomplete="off" readonly="readonly" required>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-sm-3">
               <div class="form-group input-group-sm">
-                <label for="nama">Tgl Akhir</label>
+                <label for="nama"> {{ trans('fields.tglakhir') }} </label>
                 <div class="input-group input-group-sm date" data-provide="datepicker" data-date-format="dd-mm-yyyy"  data-date-clear-btn="true">
                     <input type="text" name="endDate" value="{{ request('endDate') ? Carbon\Carbon::parse(request('endDate'))->format('d-m-Y') : date('d-M-Y') }}" class="form-control" 
                       autocomplete="off" readonly="readonly" required>
@@ -51,7 +51,7 @@
           <div class="row">
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="nama">Status Pembayaran</label>
+                <label for="nama">{{ trans('fields.statusPem') }} </label>
                 <div class="input-group input-group-sm">
                   <select name="statusBayar" class="form-control filter" >
                     <option value="">Semua</option>
@@ -63,7 +63,7 @@
             </div>
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="nama">Status Transaksi</label>
+                <label for="nama">{{ trans('fields.statusTra') }} </label>
                 <div class="input-group input-group-sm">
                   <select id="status" name="status" class="form-control filter" >
                     <option value="">Semua</option>
