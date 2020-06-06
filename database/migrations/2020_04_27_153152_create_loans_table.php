@@ -18,8 +18,9 @@ class CreateLoansTable extends Migration
             $table->integer('loan_employee_id');
             $table->string('loan_detail');
             $table->decimal('loan_amount',16,0);
+            $table->decimal('loan_installment',16,0);
             $table->integer('loan_tenor');
-            $table->boolean('loan_paidoff');
+            $table->boolean('loan_paidoff')->nullable();
             $table->boolean('loan_active');
             $table->dateTime('loan_created_at');
             $table->integer('loan_created_by');

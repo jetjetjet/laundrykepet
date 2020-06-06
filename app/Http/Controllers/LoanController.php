@@ -58,17 +58,18 @@ class LoanController extends Controller
             ->where('loan_active', '1')
             ->where('loans.id', $id)
             ->select('loans.id as id'
-            ,'em.id as loan_employee_id'
-            ,'loan_detail'
-            ,'loan_amount'
-            ,'loan_tenor'
-            ,'loan_paidoff'
-            ,'cr.user_name as loan_created_by'
-            ,'loan_created_at'
-            ,'mod.user_name as loan_modified_by'
-            ,'loan_modified_at')
-        ->first();
-        if($data == null){
+                ,'em.id as loan_employee_id'
+                ,'em.employee_name as loan_employee_name'
+                ,'loan_detail'
+                ,'loan_amount'
+                ,'loan_tenor'
+                ,'loan_paidoff'
+                ,'cr.user_name as loan_created_by'
+                ,'loan_created_at'
+                ,'mod.user_name as loan_modified_by'
+                ,'loan_modified_at')
+            ->first();
+            if($data == null){
             return view('Loan.index')->with(['error' => 'Data tidak Ditemukan']);
             }
         }
@@ -79,7 +80,7 @@ class LoanController extends Controller
     public function postDelete(Request $request, $id = null){
         $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array());
         try{
-            $ln = Loan::where('id',$id)->where('loan_active', '1')->firstOrFail();
+            $ln = Loan::where('id',$id)->where('loan_active', '1')->where('loan_paidoff', '!=', 1)->firstOrFail();
             $ln->update([
             'loan_active' => '0',
             'loan_modified_by' => Auth::user()->getAuthIdentifier(),
@@ -101,7 +102,6 @@ class LoanController extends Controller
         $rules = array(
             'loan_amount' => 'required',
             'loan_tenor' => 'required',
-            'loan_paidoff' => 'required'
         );
     
         
@@ -112,12 +112,14 @@ class LoanController extends Controller
         }
         try{
             $ln = null;
+            $installment = $request->loan_amount / $request->loan_tenor ;
             if(!$request->id) {
             $ln = Loan::create([
                 'loan_employee_id' => $request->loan_employee_id,
                 'loan_detail' => $request->loan_detail,
                 'loan_amount' => $request->loan_amount,
                 'loan_tenor' => $request->loan_tenor,
+                'loan_installment' => $installment,
                 'loan_paidoff' => $request->loan_paidoff,
                 'loan_active' => '1',
                 'loan_created_by' => Auth::user()->getAuthIdentifier(),
@@ -135,13 +137,14 @@ class LoanController extends Controller
                 return redirect(action('LoanController@getEdit', array('id' => $ln->id)));
             }
             } else {
-            $ln = Loan::where('id',$request->id)->where('loan_active', '1')->firstOrFail();
+            $ln = Loan::where('id',$request->id)->where('loan_active', '1')->where('loan_paidoff', '!=', 1)->firstOrFail();
     
             $ln->update([
                 'loan_employee_id' => $request->loan_employee_id,
                 'loan_detail' => $request->loan_detail,
                 'loan_amount' => $request->loan_amount,
                 'loan_tenor' => $request->loan_tenor,
+                'loan_installment' => $installment,
                 'loan_paidoff' => $request->loan_paidoff,
                 'loan_modified_by' => Auth::user()->getAuthIdentifier(),
                 'loan_modified_at' => now()->toDateTimeString()
@@ -152,7 +155,6 @@ class LoanController extends Controller
             return redirect(action('LoanController@getEdit', array('id' => $ln->id)));
             }
         }catch(\Exception $e){
-            dd($e);
             return redirect()->back()->with(['errorMessages' => $e->getMessage()]);
         }
     }

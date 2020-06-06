@@ -66,7 +66,7 @@ class LAbsenController extends Controller
     $loginId = Auth::user()->getAuthIdentifier();
     $result = array('success' => false, 'errorMessages' => array(), 'debugMessages' => array(), 'successMessages' => array());
   
-    $cekTgl = LAbsen::where('labsen_active', '1')->whereRaw('labsen_created_at::date = now()::date')->first();
+    $cekTgl = LAbsen::where('labsen_active', '1')->whereRaw('CAST(labsen_created_at as Date) = CAST(now() as Date)')->first();
     if($cekTgl != null){
       $request->session()->flash('errorMessages', 'Absen hari ini sudah dilakukan');
       return redirect(action('LAbsenController@index'));
@@ -128,7 +128,7 @@ class LAbsenController extends Controller
       $dAbsen = DAbsen::where('dabsen_labsen_id', $id_absen)
         ->where('dabsen_employee_id', $emp)
         ->where('dabsen_active', '1')
-        ->where(DB::raw('dabsen_created_at = now()::date'))
+        ->where(DB::raw('CAST(dabsen_created_at as DATE) = CAST(now() as Date)'))
         ->first();
         
       if($dAbsen == null){

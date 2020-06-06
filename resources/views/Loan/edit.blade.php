@@ -19,7 +19,7 @@
                     @if(empty($data->laundry_executed_at))
                       <select class="form-control" id="empSearch" name="loan_employee_id">
                     @if($data->loan_employee_id)
-                      <option value="{{$data->loan_employee_id}}" selected="selected">{{$data->loan_employee_id}}</option>
+                      <option value="{{$data->loan_employee_id}}" selected="selected">{{$data->loan_employee_name}}</option>
                     @endif
                       </select>
                     @endif
@@ -27,28 +27,27 @@
                 </div>
               <div class="form-group">
                 <label for="jumlah">Jumlah</label>
-                <input type="text" name="loan_amount" value="{{ $data->loan_amount }}" class="form-control" id="jumlah" placeholder="Jumlah Pinjaman">
+                <input type="number" name="loan_amount" value="{{ $data->loan_amount }}" class="form-control" id="jumlah" placeholder="Jumlah Pinjaman">
               </div>
               <div class="form-group">
                 <label for="tenor">Jangka Waktu</label>
                 <select class="form-control" id="tipe" name="loan_tenor">
-                  <option value="1" {{ $data->loan_tenor == '1' ? ' selected' : '' }} >1 Bulan</option>
-                  <option value="2" {{ $data->loan_tenor == '2' ? ' selected' : '' }} >2 Bulan</option>
-                  <option value="3" {{ $data->loan_tenor == '3' ? ' selected' : '' }} >3 Bulan</option>
+                  @for($i=1;$i <= 12 ;$i++)
+                    <option value="{{ $i }}" {{ $data->loan_tenor == $i ? ' selected' : '' }}>{{ $i }} Bulan</option>
+                  @endfor
                 </select>
               </div>
+              @if($data->id)
               <div class="form-group">
                 <label for="Lunas">Lunas</label>
-                <select class="form-control" id="tipe" name="loan_paidoff">
-                  <option value="1" {{ $data->loan_paidoff == '1' ? ' selected' : '' }} >Lunas</option>
-                  <option value="0" {{ $data->loan_paidoff == '0' ? ' selected' : '' }} >Belum Lunas</option>
-                </select>
+                <input type="text" name="loan_amount" value="{{ $data->loan_paidoff == '1' ? 'Lunas' : 'Belum' }}" class="form-control" readonly>
               </div>
+              @endif
               <div class="form-group form-sm">
                 <label for="keterangan">Keterangan</label>
                 <textarea class="form-control" rows="2" placeholder="Keterangan" name="loan_detail">{{ $data->loan_detail }}</textarea>
               </div>
-              @if(Perm::can(['peminjam_simpan']))
+              @if(Perm::can(['peminjam_simpan']) && $data->loan_paidoff != 1)
                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save fa-fw"></i>&nbsp;Simpan</button>
               @endif
               @if($data->id)
@@ -57,7 +56,7 @@
                     <i class="fa fa-plus fa-fw"></i>&nbsp;Tambah Baru
                   </a>
                 @endif
-                @if(Perm::can(['peminjam_tambah']))
+                @if(Perm::can(['peminjam_tambah']) && $data->loan_paidoff != 1)
                   <a href="#" class="btn btn-sm btn-danger float-right" 
                     delete-title="Konfirmasi Hapus Data"
                   delete-action="{{ action('LoanController@postDelete', array('id' => $data->id)) }}"
@@ -107,6 +106,7 @@
 @section('form-js')
 <script>
     $(document).ready(function (){
+      $('[type=number]').setupMask(0);
       $('.select2').select2({
           placeholder: 'Pilih',
           searchInputPlaceholder: 'Search options'

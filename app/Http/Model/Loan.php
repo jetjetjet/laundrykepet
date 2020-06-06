@@ -11,6 +11,7 @@ class Loan extends Model
     protected $fillable = ['loan_employee_id'
     ,'loan_detail'
     ,'loan_amount'
+    ,'loan_installment'
     ,'loan_tenor'
     ,'loan_paidoff'
     ,'loan_active'
@@ -25,6 +26,7 @@ class Loan extends Model
         $model->loan_employee_id = null;
         $model->loan_detail = null;
         $model->loan_amount = null;
+        $model->loan_installment = null;
         $model->loan_tenor = null;
         $model->loan_paidoff = null;
         $model->loan_active = null;
