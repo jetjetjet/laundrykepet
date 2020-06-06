@@ -91,6 +91,13 @@ Route::group(array('middleware' => 'auth'), function ()
     Route::post('LCategory/Save/{id?}', 'LCategoryController@postEdit')->middleware('can:laundryKategori_simpan');
     Route::post('LCategory/Delete/{id?}', 'LCategoryController@postDelete')->middleware('can:laundryKategori_hapus');
 
+    Route::get('Loan/', 'LoanController@index')->middleware('can:peminjam_list');
+    Route::get('Loan/Lists', 'LoanController@getLoanLists')->middleware('can:peminjam_list');
+    Route::get('Loan/Edit/{id?}', 'LoanController@getEdit')->middleware('can:peminjam_lihat');
+    Route::get('Loan/SearchCust', 'LoanController@searchLoan')->middleware('can:peminjam_cari');
+    Route::post('Loan/Save/{id?}', 'LoanController@postEdit')->middleware('can:peminjam_simpan');
+    Route::post('Loan/Delete/{id?}', 'LoanController@postDelete')->middleware('can:peminjam_hapus');
+
     Route::get('Role/','RoleController@index')->middleware('can:peran_list');
     Route::get('Role/Lists', 'RoleController@getRoleLists')->middleware('can:peran_list');
     Route::get('Role/Edit/{id?}', 'RoleController@getEdit')->middleware('can:peran_lihat');
