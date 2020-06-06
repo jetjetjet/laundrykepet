@@ -18,13 +18,13 @@
               <fieldset class="form-fieldset">
                 <legend>Peran Karyawan</legend>
                 <div class="form-group">
-                  <label for="nama">Nama Peran</label>
+                  <label for="nama">{{ trans('fields.namaP') }}</label>
                   <div class="wd-md-80p">
                     <input type="text" name="role_name" value="{{ old('role_name', $data->role_name) }}" class="form-control" placeholder="Nama Peran">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="nama">Daftar Karyawan</label>
+                  <label for="nama">{{ trans('fields.daftarK') }}</label>
                   <div class="select2-purple">
                     <select class="form-control select2" name="user_id[]" multiple="multiple">
                       @foreach( $user as $key=>$u)
@@ -90,20 +90,20 @@
       <div class="card-footer pd-20">
         <div class="row">
           <div class="col-12">
-            <label>Dibuat Oleh</label>
+            <label>{{ trans('fields.createdBy') }}</label>
             <input type="text" class="form-control" value="{{ $data->role_created_by}}" readonly>
           </div>
           <div class="col-12">
-            <label>Dibuat Tgl</label>
+            <label>{{ trans('fields.dibuatT') }}</label>
             <input type="text" class="form-control" value="{{ \carbon\carbon::parse($data->role_created_at)->format('d-M-Y')}}" readonly>
           </div>
           @if (!empty($data->role_modified_at))
           <div class="col-12">
-            <label>Diubah Oleh</label>
+            <label>{{ trans('fields.modifiedBy') }}</label>
             <input type="text" class="form-control" value="{{ $data->role_modified_by}}" readonly>
           </div>
           <div class="col-12">
-            <label>Diubah Tgl</label>
+            <label>{{ trans('fields.diubahT') }}</label>
             <input type="text" class="form-control"value="{{ \carbon\carbon::parse($data->role_modified_at)->format('d-M-Y')}}" readonly>
           </div>
           @endif

@@ -152,16 +152,16 @@
             <div class="table-responsive">
               <table class="table table-borderless total">
                 <tr>
-                  <td>Total</td>
+                  <td>{{ trans('fields.total') }}</td>
                   <td>: {{$data->total}}</td>
                 </tr>
                 <tr>
-                  <td>Bayar</td>
+                  <td>{{ trans('fields.bayar') }}</td>
                   <td>: {{number_format($data->laundry_paid)}}</td>
                 </tr>
                 <tr>
                   @if($data->diff != 0)
-                    <td>Kurang Bayar</td>
+                    <td>{{ trans('fields.kurangB') }}</td>
                     <td>: {{ $data->diff }}</td>
                   @else
                     <td><strong>LUNAS</strong></td>

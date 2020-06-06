@@ -3,7 +3,7 @@
 <?php $title = 'Absen Laundry' ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">Absen Laundry</a></li>
+  <li class="breadcrumb-item active"><a href="#">{{ trans('fields.absen') }}</a></li>
 @endsection
 
 @section('container')
@@ -34,10 +34,10 @@
         <table id="grid" class="table table-bordered table-hover">
           <thead>
             <tr>
-              <th>Tgl Absen</th>
-              <th>Dibuat Oleh</th>
-              <th>Tgl Diubah</th>
-              <th>Diubah Oleh</th>
+              <th>{{ trans('fields.tglAbsen') }}</th>
+              <th>{{ trans('fields.createdBy') }}</th>
+              <th>{{ trans('fields.tgldiubah') }}</th>
+              <th>{{ trans('fields.diubaholeh') }}</th>
             </tr>
           </thead>
         </table>

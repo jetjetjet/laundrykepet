@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>Nama Pelanggan</label>
+                <label>{{ trans('fields.customerName')}}</label>
                 <div class="input-group input-group-sm">
                 @if(empty($data->laundry_executed_at))
                   <select class="form-control" id="custSearch" name="laundry_customer_id">
@@ -68,7 +68,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>Antar ke alamat</label>
+                <label>{{ trans('fields.anterin') }}</label>
                   <select class="form-control" id="tipe" name="laundry_delivery" {{!empty($data->laundry_executed_at) ? 'disabled' : '' }}>
                     <option value="true" {{ $data->laundry_delivery == true ? ' selected' : '' }}>Ya</option>
                     <option value="false" {{ $data->laundry_delivery == false ? ' selected' : '' }}>Tidak</option>
@@ -82,7 +82,7 @@
         @if(Perm::can(['laundry_simpan']) && empty($data->laundry_executed_at))
           <div class="float-right">
             <button type="button" class="btn btn-sm btn-success add-row" disabled>
-              <span class="fa fa-plus fa-fw"></span>&nbsp; Tambah
+              <span class="fa fa-plus fa-fw"></span>&nbsp; {{ trans('fields.tambah') }}
             </button>
           </div>
         @endif
@@ -145,20 +145,20 @@
           <div class="card-footer pd-20">
             <div class="row">
               <div class="col-12">
-                <label>Dibuat Oleh</label>
+                <label>{{ trans('fields.createdBy') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_created_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Dibuat Tgl</label>
+                <label>{{ trans('fields.dibuatT') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ \carbon\carbon::parse($data->laundry_created_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @if (!empty($data->laundry_modified_at))
               <div class="col-12">
-                <label>Diubah Oleh</label>
+                <label>{{ trans('fields.modifiedBy') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_modified_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diubah Tgl</label>
+                <label>{{ trans('fields.diubahT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_modified_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
@@ -168,37 +168,37 @@
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_modified_by}}" readonly>
               </div> -->
               <div class="col-12">
-                <label>Diproses Tgl</label>
+                <label>{{ trans('fields.diprosesT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_execute_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->laundry_finished_at))
               <div class="col-12">
-                <label>Diselesaikan Oleh</label>
+                <label>{{ trans('fields.DiselesaikanO') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_finished_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diselesaikan Tgl</label>
+                <label>{{ trans('fields.DiselesaikanT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_finished_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->laundry_delivered_at))
               <div class="col-12">
-                <label>Diantar Oleh</label>
+                <label>{{ trans('fields.diantarO') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_delivered_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diantar Tgl</label>
+                <label>{{ trans('fields.diantarT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_delivered_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
               @if(!empty($data->laundry_taken_at))
               <div class="col-12">
-                <label>Diambil Oleh</label>
+                <label>{{ trans('fields.diambilO') }}</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $data->laundry_taken_by}}" readonly>
               </div>
               <div class="col-12">
-                <label>Diambil Tgl</label>
+                <label>{{ trans('fields.diambilT') }}</label>
                 <input type="text" class="form-control form-control-sm"value="{{ \carbon\carbon::parse($data->laundry_taken_at)->format('d-M-Y H:m')}}" readonly>
               </div>
               @endif
@@ -213,16 +213,16 @@
 <div id="custPopup" style="display:none;">
   <div class="form-horizontal">
     <div class="form-group required">
-      <label for="nama">Nama</label>
+      <label for="nama">{{ trans('fields.name') }}</label>
       <input type="hidden"  name="modal" value="1"  class="form-control">
       <input type="text"  name="customer_name" placeholder="Nama Pelanggan" class="form-control" required>
     </div>
     <div class="form-group required">
-      <label for="kontak">Kontak</label>
+      <label for="kontak">{{ trans('fields.cp') }}</label>
       <input type="text" name="customer_phone" class="form-control" id="kontak" placeholder="Kontak Pelanggan" required>
     </div>
     <div class="form-group">
-      <label for="alamat">Alamat</label>
+      <label for="alamat">{{ trans('fields.alamat') }}</label>
       <textarea class="form-control" rows="2" placeholder="Alamat" name="customer_address"></textarea>
     </div>
   </div>
@@ -231,11 +231,11 @@
 <div id="finishedPopup" class="d-none">
   <div class="form-horizontal">
     <div class="form-group required">
-      <label for="nama">DP</label>
+      <label for="nama">{{ trans('fields.dp') }}</label>
       <input type="number" value="{{$data->laundry_paid}}" id="dp" name="dp" class="form-control text-right popup-number" readonly>
     </div>
     <div class="form-group required">
-      <label for="nama">Sisa Bayar</label>
+      <label for="nama">{{ trans('fields.sisaB') }}</label>
       <input type="number" id="leftover" value="{{ isset($data->diff) ? $data->diff : '' }}" min="{{ isset($data->diff) ? $data->diff : '' }}" max="{{ isset($data->diff) ? $data->diff : '' }}" name="leftover" class="form-control text-right popup-number" required>
     </div>
   </div>
@@ -254,7 +254,7 @@
         <div class="modal-body">
           <div class="form-horizontal">
             <div class="form-group required">
-              <label>Karyawan Antar</label>
+              <label>{{ trans('fields.karyawanA') }}</label>
               <div class="input-group input-group">
                 <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
                 <select class="form-control" id="delivSearch"  name="laundry_delivered_id" {{ empty($data->laundry_delivered_by) && !empty($data->laundry_finished_by) ? "required" : ""}}>
@@ -288,7 +288,7 @@
         <div class="modal-body">
           <div class="form-horizontal">
             <div class="form-group required">
-              <label>Diambil Oleh</label>
+              <label>{{ trans('fields.diambilO') }}</label>
               <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
               <input type="text"  name="laundry_taken_by" class="form-control">
             </div>

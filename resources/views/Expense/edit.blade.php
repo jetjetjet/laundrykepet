@@ -2,7 +2,7 @@
 <?php $title = 'Data Expense' ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">User</a></li>
+  <li class="breadcrumb-item active"><a href="#"> {{ trans('fields.user') }} </a></li>
   <li class="breadcrumb-item active" aria-current="page">{{ empty($data->id) ? 'Tambah Data' : 'Ubah Data'}}</li>
 @endsection
 
@@ -16,15 +16,15 @@
               <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <div class="form-group">
-                <label for="nama">Name</label>
+                <label for="nama"> {{ trans('fields.name') }} </label>
                 <input type="text" name="expense_name" value="{{ $data->expense_name }}" class="form-control" placeholder="Kategory Name">
                 </div>
               <div class="form-group">
-              <label for="nama">Detail</label>
+              <label for="nama"> {{ trans('fields.detail') }} </label>
                 <input type="text" name="expense_detail" value="{{ $data->expense_detail }}" class="form-control" placeholder="Kategory Detail">
                 </div>
               <div class="form-group">
-              <label for="nama">Price</label>
+              <label for="nama"> {{ trans('fields.price') }} </label>
                 <input type="number" name="expense_price" value="{{ $data->expense_price }}" class="form-control" placeholder="Kategory Price">
               </div>
               @if(Perm::can(['pengeluaran_simpan']))
@@ -56,20 +56,20 @@
         <div class="card-footer pd-20">
           <div class="row">
             <div class="col-12">
-              <label>Dibuat Oleh</label>
+              <label> {{ trans('fields.createdBy') }} </label>
               <input type="text" class="form-control" value="{{ $data->expense_created_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Dibuat Tgl</label>
+              <label> {{ trans('fields.dibuatT') }} </label>
               <input type="text" class="form-control" value="{{ \carbon\carbon::parse($data->expense_created_at)->format('d-M-Y')}}" readonly>
             </div>
             @if (!empty($data->expense_modified_at))
             <div class="col-12">
-              <label>Diubah Oleh</label>
+              <label> {{ trans('fields.modifiedBy') }} </label>
               <input type="text" class="form-control" value="{{ $data->expense_modified_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Diubah Tgl</label>
+              <label> {{ trans('fields.diubahT') }} </label>
               <input type="text" class="form-control"value="{{ \carbon\carbon::parse($data->expense_modified_at)->format('d-M-Y')}}" readonly>
             </div>
             @endif

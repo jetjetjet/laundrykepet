@@ -50,20 +50,20 @@
         <div class="card-footer pd-20">
           <div class="row">
             <div class="col-12">
-              <label>Dibuat Oleh</label>
+              <label>{{ trans('fields.createdBy') }}</label>
               <input type="text" class="form-control" value="{{ $data->setting_created_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Dibuat Tgl</label>
+              <label>{{ trans('fields.dibuatT') }}</label>
               <input type="text" class="form-control" value="{{ \carbon\carbon::parse($data->setting_created_at)->format('d-M-Y')}}" readonly>
             </div>
             @if (!empty($data->setting_modified_at))
             <div class="col-12">
-              <label>Diubah Oleh</label>
+              <label>{{ trans('fields.modifiedBy') }}</label>
               <input type="text" class="form-control" value="{{ $data->setting_modified_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Diubah Tgl</label>
+              <label>{{ trans('fields.diubahT') }}</label>
               <input type="text" class="form-control"value="{{ \carbon\carbon::parse($data->setting_modified_at)->format('d-M-Y')}}" readonly>
             </div>
             @endif

@@ -12,7 +12,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="">Bulan</label>
+                    <label for=""> {{ trans('fields.bulan') }} </label>
                     <select id="bln" class="form-control filter">
                       @foreach($data->bln as $bln)
                         <option value="{{$bln->val}}" {{$bln->skrg ? 'Selected' : ''}}>{{$bln->bln}}</option>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                  <label for="">Tahun</label>
+                  <label for=""> {{ trans('fields.year') }} </label>
                     <select id="thn" class="form-control filter">
                       @foreach($data->thn as $t)
                         <option value="{{$t}}">{{$t}}</option>
@@ -45,14 +45,14 @@
           <div class="info-box mb-2 bg-success">
             <span class="info-box-icon"><i class="fa fa-shopping-cart"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Total Transaksi</span>
+              <span class="info-box-text"> {{ trans('fields.totalTra') }} </span>
               <span class="info-box-number" id="total"></span>
             </div>
           </div>
           <div class="info-box mb-2 bg-success">
             <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Belum Diproses</span>
+              <span class="info-box-text"> {{ trans('fields.belumDip') }} </span>
               <span class="info-box-number" id="draft"></span>
             </div>
           </div>
@@ -61,14 +61,14 @@
           <div class="info-box mb-3 bg-info">
             <span class="info-box-icon"><i class="fa fa-clock"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Dalam Proses</span>
+              <span class="info-box-text"> {{ trans('fields.dalamP') }} </span>
               <span class="info-box-number" id="inprog"></span>
             </div>
           </div>
           <div class="info-box mb-3 bg-info">
             <span class="info-box-icon"><i class="far fa-check-circle"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Selesai</span>
+              <span class="info-box-text"> {{ trans('fields.finish') }} </span>
               <span class="info-box-number" id="finish"></span>
             </div>
           </div>
@@ -77,14 +77,14 @@
           <div class="info-box mb-3 bg-danger">
             <span class="info-box-icon"><i class="fa fa-truck"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Diantar</span>
+              <span class="info-box-text"> {{ trans('fields.diantar') }} </span>
               <span class="info-box-number" id="deliv"></span>
             </div>
           </div>
           <div class="info-box mb-3 bg-danger">
             <span class="info-box-icon"><i class="fa fa-user"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Diambil</span>
+              <span class="info-box-text"> {{ trans('fields.diambil') }} </span>
               <span class="info-box-number" id="take"></span>
             </div>
           </div>

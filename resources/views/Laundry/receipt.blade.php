@@ -17,11 +17,11 @@
       <div class="col-6">
         <table class="table table-borderless total">
           <tr>
-            <td>No. Invoice</td>
+            <td>{{ trans('fields.noI') }}</td>
             <td>: {{$data->laundry_invoice}}</td>
           </tr>
           <tr>
-            <td width="25%">Pelanggan</td>
+            <td width="25%">{{ trans('fields.customer') }}</td>
             <td>: {{$data->customer_name}}</td>
           </tr>
           <tr>
@@ -29,11 +29,11 @@
             <td>: {{$data->customer_phone}}</td>
           </tr>
           <tr>
-            <td>Alamat</td>
+            <td>{{ trans('fields.alamat') }}</td>
             <td>: {{$data->customer_address}}</td>
           </tr>
           <tr>
-            <td>Delivery</td>
+            <td>{{ trans('fields.delivery') }}</td>
             <td>: {{ $data->laundry_delivery == true ? 'Ya' : 'Tidak'}}</td>
           </tr>
         </table>
@@ -72,16 +72,16 @@
       <div class="col-3">
         <table class="table table-borderless total">
           <tr>
-            <td>Total</td>
+            <td>{{ trans('fields.total') }}</td>
             <td>: {{$data->total}}</td>
           </tr>
           <tr>
-            <td>Bayar</td>
+            <td>{{ trans('fields.bayar') }}</td>
             <td>: {{$data->laundry_paid}}</td>
           </tr>
           <tr>
             @if($data->diff != 0)
-              <td>Kurang Bayar</td>
+              <td>{{ trans('fields.kurangB') }}</td>
               <td>: {{ $data->diff }}</td>
             @else
               <td><strong>LUNAS</strong></td>

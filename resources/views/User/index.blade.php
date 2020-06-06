@@ -30,12 +30,12 @@
         <table id="grid" class="table table-bordered table-hover">
           <thead>
           <tr>
-            <th>{{ trans('fields.username') }}</th>
-            <th>Kontak</th>
-            <th>Tgl Dibuat</th>
-            <th>Diubah Oleh</th>
-            <th>Tgl Diubah</th>
-            <th>Diubah Oleh</th>
+            <th>{{ trans('fields.userN') }}</th>
+            <th>{{ trans('fields.cp') }}</th>
+            <th>{{ trans('fields.tgldibuat') }}</th>
+            <th>{{ trans('fields.modifiedBy') }}</th>
+            <th>{{ trans('fields.tgldiubah') }}</th>
+            <th>{{ trans('fields.modifiedBy') }}</th>
           </tr>
           </thead>
         </table>

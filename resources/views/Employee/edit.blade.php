@@ -4,7 +4,7 @@
 ?>
 
 @section('breadNav')
-  <li class="breadcrumb-item active"><a href="#">Karyawan</a></li>
+  <li class="breadcrumb-item active"><a href="#"> {{ trans('fields.karyawan') }} </a></li>
   <li class="breadcrumb-item active" aria-current="page">{{ empty($data->id) ? 'Tambah Data' : 'Ubah Data'}}</li>
 @endsection
 
@@ -18,15 +18,15 @@
               <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}" />
               <input type="hidden" id="csid" name="id" value="{{ old('id', $data->id) }}" />
               <div class="form-group">
-                <label for="nama">Nama</label>
+                <label for="nama"> {{ trans('fields.name') }} </label>
                 <input type="text" name="employee_name" value="{{ $data->employee_name }}" class="form-control" id="nama" placeholder="Nama Karyawan">
               </div>
               <div class="form-group">
-                <label for="alamat">Alamat</label>
+                <label for="alamat"> {{ trans('fields.alamat') }} </label>
                 <textarea class="form-control" rows="2" placeholder="Alamat" name="employee_address">{{ $data->employee_address }}</textarea>
               </div>
               <div class="form-group">
-                <label for="kontak">Tipe Karyawan</label>
+                <label for="kontak"> {{ trans('fields.typekar') }} </label>
                 <select class="form-control" id="tipe" name="employee_type">
                   <option value="Laundry" {{ $data->employee_type == 'Laundry' ? ' selected' : '' }} >Laundry</option>
                   <option value="Steam" {{ $data->employee_type == 'Steam' ? ' selected' : '' }} >Steam</option>
@@ -75,21 +75,20 @@
         <div class="card-footer pd-20">
           <div class="row">
             <div class="col-12">
-              <label>Dibuat Oleh</label>
+              <label> {{ trans('fields.createdBy') }} </label>
               <input type="text" class="form-control" value="{{ $data->employee_created_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Dibuat Tgl</label>
+              <label> {{ trans('fields.dibuatT') }} </label>
               <input type="text" class="form-control" value="{{ \carbon\carbon::parse($data->employee_created_at)->format('d-M-Y')}}" readonly>
             </div>
             @if (!empty($data->employee_modified_at))
             <div class="col-12">
-              <label>Diubah Oleh</label>
-              
+              <label> {{ trans('fields.modifiedBy') }} </label>
               <input type="text" class="form-control" value="{{ $data->employee_modified_by}}" readonly>
             </div>
             <div class="col-12">
-              <label>Diubah Tgl</label>
+              <label> {{ trans('fields.diubahT') }} </label>
               <input type="text" class="form-control"value="{{ \carbon\carbon::parse($data->employee_modified_at)->format('d-M-Y')}}" readonly>
             </div>
             @endif
