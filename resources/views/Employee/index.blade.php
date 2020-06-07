@@ -44,6 +44,10 @@
       ajax: '{{ action("EmployeeController@getEmployeeLists") }}',
       "processing": true,
       "serverSide": false,
+      "responsive": true,
+      rowReorder: {
+        selector: 'td:nth-child(2)'
+      },
       columns: [
         { 
           data: 'employee_name',

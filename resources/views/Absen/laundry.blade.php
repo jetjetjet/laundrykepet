@@ -54,6 +54,7 @@
       ajax: '{{ action("LAbsenController@getList") }}',
       "processing": true,
       "serverSide": true,
+      "responsive": true
       columns: [
         { 
           data: 'labsen_created_at',
